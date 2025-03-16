@@ -22,7 +22,7 @@ export class Client {
      * @param body (optional) 
      * @return OK
      */
-    register(body: UserModel | undefined): Promise<void> {
+    register(body: UserRegistrationModel | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -60,7 +60,7 @@ export class Client {
      * @param body (optional) 
      * @return OK
      */
-    login(body: UserModel | undefined): Promise<void> {
+    login(body: LoginModel | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -270,7 +270,7 @@ export class Client {
      * @param language (optional) 
      * @return OK
      */
-    changeLanguage(language: LanguageEnum | undefined): Promise<BooleanResultObject> {
+    changeLanguage(language: Language | undefined): Promise<BooleanResultObject> {
         let url_ = this.baseUrl + "/api/user/changeLanguage?";
         if (language === null)
             throw new Error("The parameter 'language' cannot be null.");
@@ -312,7 +312,7 @@ export class Client {
      * @param id (optional) 
      * @return OK
      */
-    getUser(id: string | undefined): Promise<UserModel> {
+    getUser(id: string | undefined): Promise<UserModelResultObject> {
         let url_ = this.baseUrl + "/api/user/getUser?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -332,14 +332,14 @@ export class Client {
         });
     }
 
-    protected processGetUser(response: Response): Promise<UserModel> {
+    protected processGetUser(response: Response): Promise<UserModelResultObject> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserModel.fromJS(resultData200);
+            result200 = UserModelResultObject.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -347,7 +347,7 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<UserModel>(null as any);
+        return Promise.resolve<UserModelResultObject>(null as any);
     }
 
     /**
@@ -451,7 +451,8 @@ export interface IAddressModel {
 
 export class BooleanResultObject implements IBooleanResultObject {
     records?: boolean[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 
     constructor(data?: IBooleanResultObject) {
@@ -470,10 +471,15 @@ export class BooleanResultObject implements IBooleanResultObject {
                 for (let item of _data["records"])
                     this.records!.push(item);
             }
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(ValidationMessage.fromJS(item));
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
         }
@@ -493,10 +499,15 @@ export class BooleanResultObject implements IBooleanResultObject {
             for (let item of this.records)
                 data["records"].push(item);
         }
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item.toJSON());
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
         return data;
@@ -505,16 +516,29 @@ export class BooleanResultObject implements IBooleanResultObject {
 
 export interface IBooleanResultObject {
     records?: boolean[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 }
 
-export class CurriculumModel implements ICurriculumModel {
-    id!: string;
-    description!: string | undefined;
-    lessons!: ResumeModel[] | undefined;
+export class IdentityUser implements IIdentityUser {
+    id?: string | undefined;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
 
-    constructor(data?: ICurriculumModel) {
+    constructor(data?: IIdentityUser) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -526,18 +550,26 @@ export class CurriculumModel implements ICurriculumModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.description = _data["description"];
-            if (Array.isArray(_data["lessons"])) {
-                this.lessons = [] as any;
-                for (let item of _data["lessons"])
-                    this.lessons!.push(ResumeModel.fromJS(item));
-            }
+            this.userName = _data["userName"];
+            this.normalizedUserName = _data["normalizedUserName"];
+            this.email = _data["email"];
+            this.normalizedEmail = _data["normalizedEmail"];
+            this.emailConfirmed = _data["emailConfirmed"];
+            this.passwordHash = _data["passwordHash"];
+            this.securityStamp = _data["securityStamp"];
+            this.concurrencyStamp = _data["concurrencyStamp"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
+            this.twoFactorEnabled = _data["twoFactorEnabled"];
+            this.lockoutEnd = _data["lockoutEnd"] ? new Date(_data["lockoutEnd"].toString()) : <any>undefined;
+            this.lockoutEnabled = _data["lockoutEnabled"];
+            this.accessFailedCount = _data["accessFailedCount"];
         }
     }
 
-    static fromJS(data: any): CurriculumModel {
+    static fromJS(data: any): IdentityUser {
         data = typeof data === 'object' ? data : {};
-        let result = new CurriculumModel();
+        let result = new IdentityUser();
         result.init(data);
         return result;
     }
@@ -545,30 +577,113 @@ export class CurriculumModel implements ICurriculumModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["description"] = this.description;
-        if (Array.isArray(this.lessons)) {
-            data["lessons"] = [];
-            for (let item of this.lessons)
-                data["lessons"].push(item.toJSON());
-        }
+        data["userName"] = this.userName;
+        data["normalizedUserName"] = this.normalizedUserName;
+        data["email"] = this.email;
+        data["normalizedEmail"] = this.normalizedEmail;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["passwordHash"] = this.passwordHash;
+        data["securityStamp"] = this.securityStamp;
+        data["concurrencyStamp"] = this.concurrencyStamp;
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
+        data["twoFactorEnabled"] = this.twoFactorEnabled;
+        data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
+        data["lockoutEnabled"] = this.lockoutEnabled;
+        data["accessFailedCount"] = this.accessFailedCount;
         return data;
     }
 }
 
-export interface ICurriculumModel {
-    id: string;
-    description: string | undefined;
-    lessons: ResumeModel[] | undefined;
+export interface IIdentityUser {
+    id?: string | undefined;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
 }
 
-export enum LanguageEnum {
+export enum JLPT {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+}
+
+export enum Language {
     _0 = 0,
     _1 = 1,
 }
 
+export enum LanguageLevel {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+}
+
+export class LoginModel implements ILoginModel {
+    email?: string | undefined;
+    password?: string | undefined;
+    remember?: boolean;
+
+    constructor(data?: ILoginModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.password = _data["password"];
+            this.remember = _data["remember"];
+        }
+    }
+
+    static fromJS(data: any): LoginModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["password"] = this.password;
+        data["remember"] = this.remember;
+        return data;
+    }
+}
+
+export interface ILoginModel {
+    email?: string | undefined;
+    password?: string | undefined;
+    remember?: boolean;
+}
+
 export class MessageListResultObject implements IMessageListResultObject {
     records?: ValidationMessage[][] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 
     constructor(data?: IMessageListResultObject) {
@@ -587,10 +702,15 @@ export class MessageListResultObject implements IMessageListResultObject {
                 for (let item of _data["records"])
                     this.records!.push(item);
             }
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(ValidationMessage.fromJS(item));
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
         }
@@ -610,10 +730,15 @@ export class MessageListResultObject implements IMessageListResultObject {
             for (let item of this.records)
                 data["records"].push(item);
         }
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item.toJSON());
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
         return data;
@@ -622,64 +747,23 @@ export class MessageListResultObject implements IMessageListResultObject {
 
 export interface IMessageListResultObject {
     records?: ValidationMessage[][] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 }
 
-export enum MessageTypeEnum {
+export enum MessageType {
     _0 = 0,
     _1 = 1,
     _2 = 2,
 }
 
-export class RemarkModel implements IRemarkModel {
-    id!: string;
-    content?: string | undefined;
-
-    constructor(data?: IRemarkModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.content = _data["content"];
-        }
-    }
-
-    static fromJS(data: any): RemarkModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new RemarkModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["content"] = this.content;
-        return data;
-    }
-}
-
-export interface IRemarkModel {
-    id: string;
-    content?: string | undefined;
-}
-
 export class ResumeModel implements IResumeModel {
     id!: string;
-    curriculumId!: string;
     title!: string | undefined;
-    description!: string | undefined;
-    sections!: SectionModel[] | undefined;
-    curriculum!: CurriculumModel;
-    remarks?: RemarkModel[] | undefined;
+    content!: string | undefined;
+    user?: UserModel;
+    userId?: string;
 
     constructor(data?: IResumeModel) {
         if (data) {
@@ -688,28 +772,15 @@ export class ResumeModel implements IResumeModel {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-        if (!data) {
-            this.curriculum = new CurriculumModel();
-        }
     }
 
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.curriculumId = _data["curriculumId"];
             this.title = _data["title"];
-            this.description = _data["description"];
-            if (Array.isArray(_data["sections"])) {
-                this.sections = [] as any;
-                for (let item of _data["sections"])
-                    this.sections!.push(SectionModel.fromJS(item));
-            }
-            this.curriculum = _data["curriculum"] ? CurriculumModel.fromJS(_data["curriculum"]) : new CurriculumModel();
-            if (Array.isArray(_data["remarks"])) {
-                this.remarks = [] as any;
-                for (let item of _data["remarks"])
-                    this.remarks!.push(RemarkModel.fromJS(item));
-            }
+            this.content = _data["content"];
+            this.user = _data["user"] ? UserModel.fromJS(_data["user"]) : <any>undefined;
+            this.userId = _data["userId"];
         }
     }
 
@@ -723,98 +794,42 @@ export class ResumeModel implements IResumeModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["curriculumId"] = this.curriculumId;
         data["title"] = this.title;
-        data["description"] = this.description;
-        if (Array.isArray(this.sections)) {
-            data["sections"] = [];
-            for (let item of this.sections)
-                data["sections"].push(item.toJSON());
-        }
-        data["curriculum"] = this.curriculum ? this.curriculum.toJSON() : <any>undefined;
-        if (Array.isArray(this.remarks)) {
-            data["remarks"] = [];
-            for (let item of this.remarks)
-                data["remarks"].push(item.toJSON());
-        }
+        data["content"] = this.content;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["userId"] = this.userId;
         return data;
     }
 }
 
 export interface IResumeModel {
     id: string;
-    curriculumId: string;
     title: string | undefined;
-    description: string | undefined;
-    sections: SectionModel[] | undefined;
-    curriculum: CurriculumModel;
-    remarks?: RemarkModel[] | undefined;
-}
-
-export class SectionModel implements ISectionModel {
-    id!: string;
-    content!: string | undefined;
-    remarks?: RemarkModel[] | undefined;
-
-    constructor(data?: ISectionModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.content = _data["content"];
-            if (Array.isArray(_data["remarks"])) {
-                this.remarks = [] as any;
-                for (let item of _data["remarks"])
-                    this.remarks!.push(RemarkModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): SectionModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new SectionModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["content"] = this.content;
-        if (Array.isArray(this.remarks)) {
-            data["remarks"] = [];
-            for (let item of this.remarks)
-                data["remarks"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface ISectionModel {
-    id: string;
     content: string | undefined;
-    remarks?: RemarkModel[] | undefined;
+    user?: UserModel;
+    userId?: string;
 }
 
 export class UserModel implements IUserModel {
     id?: string;
-    password?: string | undefined;
-    email?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
     phoneNumber?: string | undefined;
-    dateOfbirth?: Date;
+    dateOfBirth?: Date;
     address?: AddressModel;
-    language?: LanguageEnum;
+    language?: Language;
     role?: string | undefined;
     isLoggedIn?: boolean;
+    nationality?: string | undefined;
+    visaStatus?: VisaStatus;
+    jlpt?: JLPT;
+    japaneseLevel?: LanguageLevel;
+    englishLevel?: LanguageLevel;
+    profilePicture?: string | undefined;
+    email?: string | undefined;
+    emailConfirmed?: string | undefined;
+    identityUser?: IdentityUser;
+    resume?: ResumeModel;
 
     constructor(data?: IUserModel) {
         if (data) {
@@ -828,16 +843,24 @@ export class UserModel implements IUserModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.password = _data["password"];
-            this.email = _data["email"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.phoneNumber = _data["phoneNumber"];
-            this.dateOfbirth = _data["dateOfbirth"] ? new Date(_data["dateOfbirth"].toString()) : <any>undefined;
+            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : <any>undefined;
             this.address = _data["address"] ? AddressModel.fromJS(_data["address"]) : <any>undefined;
             this.language = _data["language"];
             this.role = _data["role"];
             this.isLoggedIn = _data["isLoggedIn"];
+            this.nationality = _data["nationality"];
+            this.visaStatus = _data["visaStatus"];
+            this.jlpt = _data["jlpt"];
+            this.japaneseLevel = _data["japaneseLevel"];
+            this.englishLevel = _data["englishLevel"];
+            this.profilePicture = _data["profilePicture"];
+            this.email = _data["email"];
+            this.emailConfirmed = _data["emailConfirmed"];
+            this.identityUser = _data["identityUser"] ? IdentityUser.fromJS(_data["identityUser"]) : <any>undefined;
+            this.resume = _data["resume"] ? ResumeModel.fromJS(_data["resume"]) : <any>undefined;
         }
     }
 
@@ -851,37 +874,54 @@ export class UserModel implements IUserModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["password"] = this.password;
-        data["email"] = this.email;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["phoneNumber"] = this.phoneNumber;
-        data["dateOfbirth"] = this.dateOfbirth ? this.dateOfbirth.toISOString() : <any>undefined;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["address"] = this.address ? this.address.toJSON() : <any>undefined;
         data["language"] = this.language;
         data["role"] = this.role;
         data["isLoggedIn"] = this.isLoggedIn;
+        data["nationality"] = this.nationality;
+        data["visaStatus"] = this.visaStatus;
+        data["jlpt"] = this.jlpt;
+        data["japaneseLevel"] = this.japaneseLevel;
+        data["englishLevel"] = this.englishLevel;
+        data["profilePicture"] = this.profilePicture;
+        data["email"] = this.email;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["identityUser"] = this.identityUser ? this.identityUser.toJSON() : <any>undefined;
+        data["resume"] = this.resume ? this.resume.toJSON() : <any>undefined;
         return data;
     }
 }
 
 export interface IUserModel {
     id?: string;
-    password?: string | undefined;
-    email?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
     phoneNumber?: string | undefined;
-    dateOfbirth?: Date;
+    dateOfBirth?: Date;
     address?: AddressModel;
-    language?: LanguageEnum;
+    language?: Language;
     role?: string | undefined;
     isLoggedIn?: boolean;
+    nationality?: string | undefined;
+    visaStatus?: VisaStatus;
+    jlpt?: JLPT;
+    japaneseLevel?: LanguageLevel;
+    englishLevel?: LanguageLevel;
+    profilePicture?: string | undefined;
+    email?: string | undefined;
+    emailConfirmed?: string | undefined;
+    identityUser?: IdentityUser;
+    resume?: ResumeModel;
 }
 
 export class UserModelResultObject implements IUserModelResultObject {
     records?: UserModel[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 
     constructor(data?: IUserModelResultObject) {
@@ -900,10 +940,15 @@ export class UserModelResultObject implements IUserModelResultObject {
                 for (let item of _data["records"])
                     this.records!.push(UserModel.fromJS(item));
             }
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(ValidationMessage.fromJS(item));
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
         }
@@ -923,10 +968,15 @@ export class UserModelResultObject implements IUserModelResultObject {
             for (let item of this.records)
                 data["records"].push(item.toJSON());
         }
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item.toJSON());
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
         return data;
@@ -935,14 +985,135 @@ export class UserModelResultObject implements IUserModelResultObject {
 
 export interface IUserModelResultObject {
     records?: UserModel[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
+}
+
+export class UserRegistrationModel implements IUserRegistrationModel {
+    id?: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    phoneNumber?: string | undefined;
+    dateOfBirth?: Date;
+    address?: AddressModel;
+    language?: Language;
+    role?: string | undefined;
+    isLoggedIn?: boolean;
+    nationality?: string | undefined;
+    visaStatus?: VisaStatus;
+    jlpt?: JLPT;
+    japaneseLevel?: LanguageLevel;
+    englishLevel?: LanguageLevel;
+    profilePicture?: string | undefined;
+    emailConfirmed?: string | undefined;
+    identityUser?: IdentityUser;
+    resume?: ResumeModel;
+    email?: string | undefined;
+    confirmEmail?: string | undefined;
+    password?: string | undefined;
+    confirmPassword?: string | undefined;
+
+    constructor(data?: IUserRegistrationModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.address = _data["address"] ? AddressModel.fromJS(_data["address"]) : <any>undefined;
+            this.language = _data["language"];
+            this.role = _data["role"];
+            this.isLoggedIn = _data["isLoggedIn"];
+            this.nationality = _data["nationality"];
+            this.visaStatus = _data["visaStatus"];
+            this.jlpt = _data["jlpt"];
+            this.japaneseLevel = _data["japaneseLevel"];
+            this.englishLevel = _data["englishLevel"];
+            this.profilePicture = _data["profilePicture"];
+            this.emailConfirmed = _data["emailConfirmed"];
+            this.identityUser = _data["identityUser"] ? IdentityUser.fromJS(_data["identityUser"]) : <any>undefined;
+            this.resume = _data["resume"] ? ResumeModel.fromJS(_data["resume"]) : <any>undefined;
+            this.email = _data["email"];
+            this.confirmEmail = _data["confirmEmail"];
+            this.password = _data["password"];
+            this.confirmPassword = _data["confirmPassword"];
+        }
+    }
+
+    static fromJS(data: any): UserRegistrationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRegistrationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["phoneNumber"] = this.phoneNumber;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["address"] = this.address ? this.address.toJSON() : <any>undefined;
+        data["language"] = this.language;
+        data["role"] = this.role;
+        data["isLoggedIn"] = this.isLoggedIn;
+        data["nationality"] = this.nationality;
+        data["visaStatus"] = this.visaStatus;
+        data["jlpt"] = this.jlpt;
+        data["japaneseLevel"] = this.japaneseLevel;
+        data["englishLevel"] = this.englishLevel;
+        data["profilePicture"] = this.profilePicture;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["identityUser"] = this.identityUser ? this.identityUser.toJSON() : <any>undefined;
+        data["resume"] = this.resume ? this.resume.toJSON() : <any>undefined;
+        data["email"] = this.email;
+        data["confirmEmail"] = this.confirmEmail;
+        data["password"] = this.password;
+        data["confirmPassword"] = this.confirmPassword;
+        return data;
+    }
+}
+
+export interface IUserRegistrationModel {
+    id?: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    phoneNumber?: string | undefined;
+    dateOfBirth?: Date;
+    address?: AddressModel;
+    language?: Language;
+    role?: string | undefined;
+    isLoggedIn?: boolean;
+    nationality?: string | undefined;
+    visaStatus?: VisaStatus;
+    jlpt?: JLPT;
+    japaneseLevel?: LanguageLevel;
+    englishLevel?: LanguageLevel;
+    profilePicture?: string | undefined;
+    emailConfirmed?: string | undefined;
+    identityUser?: IdentityUser;
+    resume?: ResumeModel;
+    email?: string | undefined;
+    confirmEmail?: string | undefined;
+    password?: string | undefined;
+    confirmPassword?: string | undefined;
 }
 
 export class ValidationMessage implements IValidationMessage {
     messageEnglish?: string | undefined;
     messageJapanese?: string | undefined;
-    type?: MessageTypeEnum;
+    type?: MessageType;
 
     constructor(data?: IValidationMessage) {
         if (data) {
@@ -980,12 +1151,13 @@ export class ValidationMessage implements IValidationMessage {
 export interface IValidationMessage {
     messageEnglish?: string | undefined;
     messageJapanese?: string | undefined;
-    type?: MessageTypeEnum;
+    type?: MessageType;
 }
 
 export class ValidationMessageResultObject implements IValidationMessageResultObject {
     records?: ValidationMessage[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
 
     constructor(data?: IValidationMessageResultObject) {
@@ -1004,10 +1176,15 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
                 for (let item of _data["records"])
                     this.records!.push(ValidationMessage.fromJS(item));
             }
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(ValidationMessage.fromJS(item));
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
         }
@@ -1027,10 +1204,15 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
             for (let item of this.records)
                 data["records"].push(item.toJSON());
         }
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item.toJSON());
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
         return data;
@@ -1039,8 +1221,19 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
 
 export interface IValidationMessageResultObject {
     records?: ValidationMessage[] | undefined;
-    messages?: ValidationMessage[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
     isError?: boolean;
+}
+
+export enum VisaStatus {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
 }
 
 export class ApiException extends Error {
