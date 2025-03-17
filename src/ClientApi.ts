@@ -15,14 +15,14 @@ export class Client {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "/";
+        this.baseUrl = baseUrl ?? "http://localhost:5240";
     }
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    register(body: UserRegistrationModel | undefined): Promise<void> {
+    register(body: UserRegistrationModel | undefined): Promise<StringResultObject> {
         let url_ = this.baseUrl + "/api/Auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -33,6 +33,7 @@ export class Client {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "text/plain"
             }
         };
 
@@ -41,26 +42,29 @@ export class Client {
         });
     }
 
-    protected processRegister(response: Response): Promise<void> {
+    protected processRegister(response: Response): Promise<StringResultObject> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StringResultObject.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<StringResultObject>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    login(body: LoginModel | undefined): Promise<void> {
+    login(body: LoginModel | undefined): Promise<IActionResultResultObject> {
         let url_ = this.baseUrl + "/api/Auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -71,6 +75,7 @@ export class Client {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "text/plain"
             }
         };
 
@@ -79,19 +84,22 @@ export class Client {
         });
     }
 
-    protected processLogin(response: Response): Promise<void> {
+    protected processLogin(response: Response): Promise<IActionResultResultObject> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = IActionResultResultObject.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<IActionResultResultObject>(null as any);
     }
 
     /**
@@ -393,6 +401,36 @@ export class Client {
     }
 }
 
+export class ActionResult implements IActionResult {
+
+    constructor(data?: IActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new ActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IActionResult {
+}
+
 export class AddressModel implements IAddressModel {
     id!: string;
     street!: string | undefined;
@@ -449,11 +487,53 @@ export interface IAddressModel {
     country: string | undefined;
 }
 
+export class BooleanActionResult implements IBooleanActionResult {
+    result?: ActionResult;
+    value?: boolean;
+
+    constructor(data?: IBooleanActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): BooleanActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new BooleanActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IBooleanActionResult {
+    result?: ActionResult;
+    value?: boolean;
+}
+
 export class BooleanResultObject implements IBooleanResultObject {
-    records?: boolean[] | undefined;
+    records?: BooleanActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 
     constructor(data?: IBooleanResultObject) {
         if (data) {
@@ -469,7 +549,7 @@ export class BooleanResultObject implements IBooleanResultObject {
             if (Array.isArray(_data["records"])) {
                 this.records = [] as any;
                 for (let item of _data["records"])
-                    this.records!.push(item);
+                    this.records!.push(BooleanActionResult.fromJS(item));
             }
             if (Array.isArray(_data["userMessages"])) {
                 this.userMessages = [] as any;
@@ -482,6 +562,8 @@ export class BooleanResultObject implements IBooleanResultObject {
                     this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
         }
     }
 
@@ -497,7 +579,7 @@ export class BooleanResultObject implements IBooleanResultObject {
         if (Array.isArray(this.records)) {
             data["records"] = [];
             for (let item of this.records)
-                data["records"].push(item);
+                data["records"].push(item.toJSON());
         }
         if (Array.isArray(this.userMessages)) {
             data["userMessages"] = [];
@@ -510,15 +592,169 @@ export class BooleanResultObject implements IBooleanResultObject {
                 data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
         return data;
     }
 }
 
 export interface IBooleanResultObject {
-    records?: boolean[] | undefined;
+    records?: BooleanActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
+}
+
+export class IActionResult implements IIActionResult {
+
+    constructor(data?: IIActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): IActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new IActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IIActionResult {
+}
+
+export class IActionResultActionResult implements IIActionResultActionResult {
+    result?: ActionResult;
+    value?: IActionResult;
+
+    constructor(data?: IIActionResultActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            this.value = _data["value"] ? IActionResult.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): IActionResultActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new IActionResultActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IIActionResultActionResult {
+    result?: ActionResult;
+    value?: IActionResult;
+}
+
+export class IActionResultResultObject implements IIActionResultResultObject {
+    records?: IActionResultActionResult[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
+    isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
+
+    constructor(data?: IIActionResultResultObject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["records"])) {
+                this.records = [] as any;
+                for (let item of _data["records"])
+                    this.records!.push(IActionResultActionResult.fromJS(item));
+            }
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
+            }
+            this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
+        }
+    }
+
+    static fromJS(data: any): IActionResultResultObject {
+        data = typeof data === 'object' ? data : {};
+        let result = new IActionResultResultObject();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.records)) {
+            data["records"] = [];
+            for (let item of this.records)
+                data["records"].push(item.toJSON());
+        }
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
+        }
+        data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
+        return data;
+    }
+}
+
+export interface IIActionResultResultObject {
+    records?: IActionResultActionResult[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
+    isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 }
 
 export class IdentityUser implements IIdentityUser {
@@ -614,26 +850,26 @@ export interface IIdentityUser {
 }
 
 export enum JLPT {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
+    N5 = "N5",
+    N4 = "N4",
+    N3 = "N3",
+    N2 = "N2",
+    N1 = "N1",
+    None = "None",
 }
 
 export enum Language {
-    _0 = 0,
-    _1 = 1,
+    Japanese = "Japanese",
+    English = "English",
 }
 
 export enum LanguageLevel {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
+    None = "None",
+    Some = "Some",
+    Conversational = "Conversational",
+    Business = "Business",
+    Fluent = "Fluent",
+    Native = "Native",
 }
 
 export class LoginModel implements ILoginModel {
@@ -680,11 +916,61 @@ export interface ILoginModel {
     remember?: boolean;
 }
 
+export class MessageListActionResult implements IMessageListActionResult {
+    result?: ActionResult;
+    value?: ValidationMessage[] | undefined;
+
+    constructor(data?: IMessageListActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            if (Array.isArray(_data["value"])) {
+                this.value = [] as any;
+                for (let item of _data["value"])
+                    this.value!.push(ValidationMessage.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): MessageListActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new MessageListActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        if (Array.isArray(this.value)) {
+            data["value"] = [];
+            for (let item of this.value)
+                data["value"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IMessageListActionResult {
+    result?: ActionResult;
+    value?: ValidationMessage[] | undefined;
+}
+
 export class MessageListResultObject implements IMessageListResultObject {
-    records?: ValidationMessage[][] | undefined;
+    records?: MessageListActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 
     constructor(data?: IMessageListResultObject) {
         if (data) {
@@ -700,7 +986,7 @@ export class MessageListResultObject implements IMessageListResultObject {
             if (Array.isArray(_data["records"])) {
                 this.records = [] as any;
                 for (let item of _data["records"])
-                    this.records!.push(item);
+                    this.records!.push(MessageListActionResult.fromJS(item));
             }
             if (Array.isArray(_data["userMessages"])) {
                 this.userMessages = [] as any;
@@ -713,6 +999,8 @@ export class MessageListResultObject implements IMessageListResultObject {
                     this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
         }
     }
 
@@ -728,7 +1016,7 @@ export class MessageListResultObject implements IMessageListResultObject {
         if (Array.isArray(this.records)) {
             data["records"] = [];
             for (let item of this.records)
-                data["records"].push(item);
+                data["records"].push(item.toJSON());
         }
         if (Array.isArray(this.userMessages)) {
             data["userMessages"] = [];
@@ -741,21 +1029,30 @@ export class MessageListResultObject implements IMessageListResultObject {
                 data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
         return data;
     }
 }
 
 export interface IMessageListResultObject {
-    records?: ValidationMessage[][] | undefined;
+    records?: MessageListActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 }
 
 export enum MessageType {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
+    Warning = "Warning",
+    Error = "Error",
+    Info = "Info",
+}
+
+export enum RegistrationType {
+    User = "User",
+    Company = "Company",
 }
 
 export class ResumeModel implements IResumeModel {
@@ -808,6 +1105,126 @@ export interface IResumeModel {
     content: string | undefined;
     user?: UserModel;
     userId?: string;
+}
+
+export class StringActionResult implements IStringActionResult {
+    result?: ActionResult;
+    value?: string | undefined;
+
+    constructor(data?: IStringActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): StringActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new StringActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IStringActionResult {
+    result?: ActionResult;
+    value?: string | undefined;
+}
+
+export class StringResultObject implements IStringResultObject {
+    records?: StringActionResult[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
+    isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
+
+    constructor(data?: IStringResultObject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["records"])) {
+                this.records = [] as any;
+                for (let item of _data["records"])
+                    this.records!.push(StringActionResult.fromJS(item));
+            }
+            if (Array.isArray(_data["userMessages"])) {
+                this.userMessages = [] as any;
+                for (let item of _data["userMessages"])
+                    this.userMessages!.push(ValidationMessage.fromJS(item));
+            }
+            if (Array.isArray(_data["systemMessages"])) {
+                this.systemMessages = [] as any;
+                for (let item of _data["systemMessages"])
+                    this.systemMessages!.push(item);
+            }
+            this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
+        }
+    }
+
+    static fromJS(data: any): StringResultObject {
+        data = typeof data === 'object' ? data : {};
+        let result = new StringResultObject();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.records)) {
+            data["records"] = [];
+            for (let item of this.records)
+                data["records"].push(item.toJSON());
+        }
+        if (Array.isArray(this.userMessages)) {
+            data["userMessages"] = [];
+            for (let item of this.userMessages)
+                data["userMessages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.systemMessages)) {
+            data["systemMessages"] = [];
+            for (let item of this.systemMessages)
+                data["systemMessages"].push(item);
+        }
+        data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
+        return data;
+    }
+}
+
+export interface IStringResultObject {
+    records?: StringActionResult[] | undefined;
+    userMessages?: ValidationMessage[] | undefined;
+    systemMessages?: string[] | undefined;
+    isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 }
 
 export class UserModel implements IUserModel {
@@ -918,11 +1335,53 @@ export interface IUserModel {
     resume?: ResumeModel;
 }
 
+export class UserModelActionResult implements IUserModelActionResult {
+    result?: ActionResult;
+    value?: UserModel;
+
+    constructor(data?: IUserModelActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            this.value = _data["value"] ? UserModel.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserModelActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserModelActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUserModelActionResult {
+    result?: ActionResult;
+    value?: UserModel;
+}
+
 export class UserModelResultObject implements IUserModelResultObject {
-    records?: UserModel[] | undefined;
+    records?: UserModelActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 
     constructor(data?: IUserModelResultObject) {
         if (data) {
@@ -938,7 +1397,7 @@ export class UserModelResultObject implements IUserModelResultObject {
             if (Array.isArray(_data["records"])) {
                 this.records = [] as any;
                 for (let item of _data["records"])
-                    this.records!.push(UserModel.fromJS(item));
+                    this.records!.push(UserModelActionResult.fromJS(item));
             }
             if (Array.isArray(_data["userMessages"])) {
                 this.userMessages = [] as any;
@@ -951,6 +1410,8 @@ export class UserModelResultObject implements IUserModelResultObject {
                     this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
         }
     }
 
@@ -979,15 +1440,19 @@ export class UserModelResultObject implements IUserModelResultObject {
                 data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
         return data;
     }
 }
 
 export interface IUserModelResultObject {
-    records?: UserModel[] | undefined;
+    records?: UserModelActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 }
 
 export class UserRegistrationModel implements IUserRegistrationModel {
@@ -1013,6 +1478,7 @@ export class UserRegistrationModel implements IUserRegistrationModel {
     confirmEmail?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
+    type?: RegistrationType;
 
     constructor(data?: IUserRegistrationModel) {
         if (data) {
@@ -1047,6 +1513,7 @@ export class UserRegistrationModel implements IUserRegistrationModel {
             this.confirmEmail = _data["confirmEmail"];
             this.password = _data["password"];
             this.confirmPassword = _data["confirmPassword"];
+            this.type = _data["type"];
         }
     }
 
@@ -1081,6 +1548,7 @@ export class UserRegistrationModel implements IUserRegistrationModel {
         data["confirmEmail"] = this.confirmEmail;
         data["password"] = this.password;
         data["confirmPassword"] = this.confirmPassword;
+        data["type"] = this.type;
         return data;
     }
 }
@@ -1108,6 +1576,7 @@ export interface IUserRegistrationModel {
     confirmEmail?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
+    type?: RegistrationType;
 }
 
 export class ValidationMessage implements IValidationMessage {
@@ -1154,11 +1623,53 @@ export interface IValidationMessage {
     type?: MessageType;
 }
 
+export class ValidationMessageActionResult implements IValidationMessageActionResult {
+    result?: ActionResult;
+    value?: ValidationMessage;
+
+    constructor(data?: IValidationMessageActionResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"] ? ActionResult.fromJS(_data["result"]) : <any>undefined;
+            this.value = _data["value"] ? ValidationMessage.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ValidationMessageActionResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new ValidationMessageActionResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IValidationMessageActionResult {
+    result?: ActionResult;
+    value?: ValidationMessage;
+}
+
 export class ValidationMessageResultObject implements IValidationMessageResultObject {
-    records?: ValidationMessage[] | undefined;
+    records?: ValidationMessageActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 
     constructor(data?: IValidationMessageResultObject) {
         if (data) {
@@ -1174,7 +1685,7 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
             if (Array.isArray(_data["records"])) {
                 this.records = [] as any;
                 for (let item of _data["records"])
-                    this.records!.push(ValidationMessage.fromJS(item));
+                    this.records!.push(ValidationMessageActionResult.fromJS(item));
             }
             if (Array.isArray(_data["userMessages"])) {
                 this.userMessages = [] as any;
@@ -1187,6 +1698,8 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
                     this.systemMessages!.push(item);
             }
             this.isError = _data["isError"];
+            this.httpErrorCode = _data["httpErrorCode"];
+            this.httpErrorMessage = _data["httpErrorMessage"];
         }
     }
 
@@ -1215,25 +1728,29 @@ export class ValidationMessageResultObject implements IValidationMessageResultOb
                 data["systemMessages"].push(item);
         }
         data["isError"] = this.isError;
+        data["httpErrorCode"] = this.httpErrorCode;
+        data["httpErrorMessage"] = this.httpErrorMessage;
         return data;
     }
 }
 
 export interface IValidationMessageResultObject {
-    records?: ValidationMessage[] | undefined;
+    records?: ValidationMessageActionResult[] | undefined;
     userMessages?: ValidationMessage[] | undefined;
     systemMessages?: string[] | undefined;
     isError?: boolean;
+    httpErrorCode?: number;
+    httpErrorMessage?: string | undefined;
 }
 
 export enum VisaStatus {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
-    _6 = 6,
+    Working = "Working",
+    HighlySkilled = "HighlySkilled",
+    IntraCompanyTransfee = "IntraCompanyTransfee",
+    Student = "Student",
+    WorkingHoliday = "WorkingHoliday",
+    Spouse = "Spouse",
+    NoVisa = "NoVisa",
 }
 
 export class ApiException extends Error {

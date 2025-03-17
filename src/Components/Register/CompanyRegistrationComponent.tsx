@@ -5,7 +5,7 @@ import {FieldType} from "../../Interfaces/FieldType.ts";
 import {EnumText} from "../../Enums/EnumTextName.ts";
 import ButtonComponent from "../Shared/ButtonComponent.tsx";
 
-const RegisterCompanyComponent: React.FunctionComponent  = () => {
+const CompanyRegistrationComponent: React.FunctionComponent  = () => {
     const [registrationModel, setRegistrationModel] = React.useState({} as IUserRegistrationModel);
     const onRegisterPress = (): void => {
 
@@ -34,4 +34,4 @@ const RegisterCompanyComponent: React.FunctionComponent  = () => {
     )
 }
 
-export default RegisterCompanyComponent;
+export default CompanyRegistrationComponent;

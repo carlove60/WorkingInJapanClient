@@ -4,11 +4,13 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import {GetText} from "./Helpers/TranslatedText.ts";
 import {LanguageEnum} from "./Interfaces/ITranslatedText.ts";
+import FrontPage from "./Components/FrontPage.tsx";
 
 function App() {
   const [count, setCount] = useState(0)
   return (
     <>
+        <FrontPage></FrontPage>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

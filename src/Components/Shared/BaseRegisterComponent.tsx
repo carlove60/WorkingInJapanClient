@@ -3,20 +3,26 @@ import FieldComponent from "../Shared/FieldComponent.tsx";
 import ButtonComponent from "../Shared/ButtonComponent.tsx";
 import {EnumText} from "../../Enums/EnumTextName.ts";
 import {FieldType} from "../../Interfaces/FieldType.ts";
-import {IUserRegistrationModel} from "../../ClientApi.ts";
+import {UserRegistrationModel} from "../../ClientApi.ts";
 import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
+import useUpdateModel from "../../Hooks/useUpdateModel.ts";
 
 export interface IRegisterProps {
-    type: "Company" | "Searcher",
-    onRegisterPressCallback?: (registrationModel: IUserRegistrationModel, type: "Company" | "Searcher") => void,
+    onRegisterPressCallback?: () => void,
     onCancelPressCallback?: () => void,
+    onChange: (model: UserRegistrationModel) => void
 }
 
-const BaseRegisterComponent: React.FunctionComponent = ({type, onRegisterPressCallback, onCancelPressCallback}: IRegisterProps) => {
-    const [registrationModel, setRegistrationModel] = React.useState({} as IUserRegistrationModel);
+const BaseRegisterComponent = ({onRegisterPressCallback, onCancelPressCallback, onChange}: IRegisterProps) => {
+    const { model: registrationModel, updateModel: setRegistrationModel } = useUpdateModel<UserRegistrationModel>({} as UserRegistrationModel);
+
+    React.useEffect(() => {
+        onChange(registrationModel);
+    }, [onChange, registrationModel]);
+
     const onRegisterPress = (): void => {
         if (isNotNullOrUndefined(onRegisterPressCallback)) {
-            onRegisterPressCallback(registrationModel, type);
+            onRegisterPressCallback();
         }
     };
 
@@ -25,20 +31,12 @@ const BaseRegisterComponent: React.FunctionComponent = ({type, onRegisterPressCa
             onCancelPressCallback();
         }
     };
-
-    const updateRegistrationModel = (key: keyof IUserRegistrationModel, value: string): void => {
-        setRegistrationModel(prevState => ({
-            ...prevState,
-            [key]: value
-        }));
-    };
-
     return (
         <div>
-            <FieldComponent type={FieldType.Text} value={registrationModel.email} onChange={(value) => updateRegistrationModel("email" ,value)} label={EnumText.Email} />
-            <FieldComponent type={FieldType.Text} value={registrationModel.confirmEmail} onChange={(value) => updateRegistrationModel("confirmEmail", value)} label={EnumText.EmailConfirm} />
-            <FieldComponent type={FieldType.Text} value={registrationModel.password} onChange={(value) => updateRegistrationModel("password",value)} label={EnumText.Password} />
-            <FieldComponent type={FieldType.Text} value={registrationModel.confirmPassword} onChange={(value) => updateRegistrationModel("confirmPassword",value)} label={EnumText.PasswordConfirm} />
+            <FieldComponent type={FieldType.Text} value={registrationModel.email} onChange={(value) => setRegistrationModel("email" ,value)} label={EnumText.Email} />
+            <FieldComponent type={FieldType.Text} value={registrationModel.confirmEmail} onChange={(value) => setRegistrationModel("confirmEmail", value)} label={EnumText.EmailConfirm} />
+            <FieldComponent type={FieldType.Text} value={registrationModel.password} onChange={(value) => setRegistrationModel("password",value)} label={EnumText.Password} />
+            <FieldComponent type={FieldType.Text} value={registrationModel.confirmPassword} onChange={(value) => setRegistrationModel("confirmPassword",value)} label={EnumText.PasswordConfirm} />
             <ButtonComponent text={EnumText.Ok} onPress={onRegisterPress} />
             <ButtonComponent text={EnumText.Cancel} onPress={onCancelPress} />
         </div>
