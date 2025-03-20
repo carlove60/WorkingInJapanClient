@@ -1,36 +1,65 @@
-import {useState} from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import {GetText} from "./Helpers/TranslatedText.ts";
-import {LanguageEnum} from "./Interfaces/ITranslatedText.ts";
 import FrontPage from "./Components/FrontPage.tsx";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Layout from "./Layout.tsx";
+import AboutPage from "./Pages/AboutPage.tsx";
+import NotFoundPage from "./Pages/NotFoundPage.tsx";
+import RegistrationPage from "./Pages/Login/RegisterPage.tsx";
+import {RegistrationType} from "./ClientApi.ts";
+import Paths from "./Constants/Paths.ts";
+import * as React from "react";
+import {isNotNullOrEmpty} from "./Helpers/StringHelper.ts";
+import {isNotNullOrUndefined} from "./Helpers/Guard.ts";
+import {apiClient} from "./ApiClient.ts";
 
 function App() {
-  const [count, setCount] = useState(0)
+    React.useEffect(() => {
+        const apiFetch = async () => {
+            apiClient.api.auth.checkSession.get().then(((x) => {
+            if (x) {
+                if (isNotNullOrEmpty(x)) {
+                    localStorage.setItem("token", x);
+                }
+            }}
+            )).catch((x) => console.log(x.headers));
+
+        };
+        apiFetch().finally();
+    }, []);
+
+    const CheckSession = (interval = 300000) => {
+        React.useEffect(() => {
+            const timer = setInterval(async () => {
+                if (isNotNullOrUndefined(localStorage.getItem("token"))) {
+                    const response = await apiClient.api.auth.checkSession.get();
+                    if (response) {
+                        localStorage.removeItem("token");
+                        window.location.href = "/" + Paths.Login; // Redirect to login
+                    }
+                }
+            }, interval);
+
+            return () => clearInterval(timer);
+        }, [interval]);
+    };
+    CheckSession();
+
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <Layout />, // A common layout with a navbar
+            children: [
+                { index: true, element: <FrontPage /> }, // Default route
+                { path: Paths.About, element: <AboutPage /> },
+                { path: Paths.RegisterUser, element: <RegistrationPage type={RegistrationType.User} />},
+                { path: Paths.RegisterCompany, element: <RegistrationPage type={RegistrationType.Company} />}
+            ],
+        },
+        { path: "*", element: <NotFoundPage /> }, // Catch-all 404 page
+    ]);
   return (
     <>
-        <FrontPage></FrontPage>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React: {GetText("", LanguageEnum.Japanese)}</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        <RouterProvider router={router} />
     </>
   )
 }

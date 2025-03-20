@@ -11,6 +11,7 @@ const UserRegistrationComponent: React.FunctionComponent  = () => {
 
     const onRegisterPress = () => {
         const client = new Client();
+        registrationModel.type = RegistrationType.User;
         const result = client.register(registrationModel);
         result.then((result) => {
             console.log(result);
@@ -18,7 +19,6 @@ const UserRegistrationComponent: React.FunctionComponent  = () => {
     }
 
     const onChange = (value: UserRegistrationModel): void => {
-        value.type = RegistrationType.User;
         setRegistrationModel(value);
     };
 

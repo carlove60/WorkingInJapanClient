@@ -1,7 +1,6 @@
 export interface ITranslatedText {
-    English: string;
-    Japanese: string;
-    Name: string;
+    Language: LanguageEnum;
+    Text: string
 }
 
 export enum LanguageEnum {

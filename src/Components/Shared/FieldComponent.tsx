@@ -3,7 +3,8 @@ import {FieldType} from "../../Interfaces/FieldType.ts";
 import * as Guard from "../../Helpers/Guard.ts";
 import DraftEditor from "./DraftJs.tsx";
 import {EnumText} from "../../Enums/EnumTextName.ts";
-import {Texts} from "../../Constants/Texts.ts";
+import {getTranslatedText} from "../../Helpers/TextHelper.ts";
+import {LanguageEnum} from "../../Interfaces/ITranslatedText.ts";
 
 interface Props {
     type: FieldType;
@@ -12,6 +13,7 @@ interface Props {
     onChange?: (value: string) => void | undefined;
     readOnly?: boolean;
 }
+
 const FieldComponent = ({type, label, value, onChange, readOnly} : Props) => {
     const onContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -26,7 +28,7 @@ const FieldComponent = ({type, label, value, onChange, readOnly} : Props) => {
 
     const labelText = (): string => {
         if (Guard.isNotNullOrUndefined(label)) {
-            return Texts.filter((text) => text.Name === label)[0].English;
+            return getTranslatedText(EnumText.Welcome, LanguageEnum.English) ?? "";
         }
 
         return "Label";

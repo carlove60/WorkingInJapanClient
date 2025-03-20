@@ -12,6 +12,7 @@ export enum EnumText {
     EmailConfirm,
     Password,
     PasswordConfirm,
-    UndefinedModel
+    UndefinedModel,
+    Welcome
 
 }

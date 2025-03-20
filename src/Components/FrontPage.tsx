@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import PrimarySearchAppBar from "./AppBar/AppBar.tsx";
 
 function FrontPage() {
     const [count, setCount] = useState(0)
 
     return (
         <>
-            <PrimarySearchAppBar></PrimarySearchAppBar>
             <div>
                 <a href="https://vite.dev" target="_blank">
                 </a>
