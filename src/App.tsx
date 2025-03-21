@@ -5,12 +5,12 @@ import Layout from "./Layout.tsx";
 import AboutPage from "./Pages/AboutPage.tsx";
 import NotFoundPage from "./Pages/NotFoundPage.tsx";
 import RegistrationPage from "./Pages/Login/RegisterPage.tsx";
-import {RegistrationType} from "./ClientApi.ts";
 import Paths from "./Constants/Paths.ts";
 import * as React from "react";
 import {isNotNullOrEmpty} from "./Helpers/StringHelper.ts";
 import {isNotNullOrUndefined} from "./Helpers/Guard.ts";
 import {apiClient} from "./ApiClient.ts";
+import {RegistrationTypeObject} from "../generated-client/models";
 
 function App() {
     React.useEffect(() => {
@@ -51,8 +51,8 @@ function App() {
             children: [
                 { index: true, element: <FrontPage /> }, // Default route
                 { path: Paths.About, element: <AboutPage /> },
-                { path: Paths.RegisterUser, element: <RegistrationPage type={RegistrationType.User} />},
-                { path: Paths.RegisterCompany, element: <RegistrationPage type={RegistrationType.Company} />}
+                { path: Paths.RegisterUser, element: <RegistrationPage type={RegistrationTypeObject.User} />},
+                { path: Paths.RegisterCompany, element: <RegistrationPage type={RegistrationTypeObject.Company} />}
             ],
         },
         { path: "*", element: <NotFoundPage /> }, // Catch-all 404 page

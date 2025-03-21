@@ -3,9 +3,9 @@ import FieldComponent from "../Shared/FieldComponent.tsx";
 import ButtonComponent from "../Shared/ButtonComponent.tsx";
 import {EnumText} from "../../Enums/EnumTextName.ts";
 import {FieldType} from "../../Interfaces/FieldType.ts";
-import {UserRegistrationModel} from "../../ClientApi.ts";
 import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
+import {UserRegistrationModel} from "../../../generated-client/models";
 
 export interface IRegisterProps {
     onRegisterPressCallback?: () => void,

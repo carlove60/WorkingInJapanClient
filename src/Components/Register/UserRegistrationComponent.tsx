@@ -1,6 +1,7 @@
-import {Client, RegistrationType, UserRegistrationModel} from "../../ClientApi.ts";
 import * as React from "react";
 import BaseRegisterComponent from "../Shared/BaseRegisterComponent.tsx";
+import {RegistrationTypeObject, UserRegistrationModel} from "../../../generated-client/models";
+import {apiClient} from "../../ApiClient.ts";
 
 const UserRegistrationComponent: React.FunctionComponent  = () => {
     const [registrationModel, setRegistrationModel] = React.useState({} as UserRegistrationModel);
@@ -10,9 +11,8 @@ const UserRegistrationComponent: React.FunctionComponent  = () => {
     };
 
     const onRegisterPress = () => {
-        const client = new Client();
-        registrationModel.type = RegistrationType.User;
-        const result = client.register(registrationModel);
+        registrationModel.type = RegistrationTypeObject.User;
+        const result = apiClient.api.user.register.post(registrationModel);
         result.then((result) => {
             console.log(result);
         })

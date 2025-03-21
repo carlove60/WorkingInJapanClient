@@ -9,7 +9,7 @@ import {LanguageEnum} from "../../Interfaces/ITranslatedText.ts";
 interface Props {
     type: FieldType;
     label: EnumText;
-    value: string | undefined;
+    value: string | null | undefined;
     onChange?: (value: string) => void | undefined;
     readOnly?: boolean;
 }
