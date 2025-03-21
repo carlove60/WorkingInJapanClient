@@ -9,13 +9,13 @@ import Paths from "./Constants/Paths.ts";
 import * as React from "react";
 import {isNotNullOrEmpty} from "./Helpers/StringHelper.ts";
 import {isNotNullOrUndefined} from "./Helpers/Guard.ts";
-import {apiClient} from "./ApiClient.ts";
 import {RegistrationTypeObject} from "../generated-client/models";
+import Client from "./ApiClient.ts";
 
 function App() {
     React.useEffect(() => {
         const apiFetch = async () => {
-            apiClient.api.auth.checkSession.get().then(((x) => {
+            Client.instance.api.auth.checkSession.get().then(((x) => {
             if (x) {
                 if (isNotNullOrEmpty(x)) {
                     localStorage.setItem("token", x);
@@ -31,7 +31,7 @@ function App() {
         React.useEffect(() => {
             const timer = setInterval(async () => {
                 if (isNotNullOrUndefined(localStorage.getItem("token"))) {
-                    const response = await apiClient.api.auth.checkSession.get();
+                    const response = await Client.instance.api.auth.checkSession.get();
                     if (response) {
                         localStorage.removeItem("token");
                         window.location.href = "/" + Paths.Login; // Redirect to login
