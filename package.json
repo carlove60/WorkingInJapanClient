@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "gen": "npx openapi --input /Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json --output ./src/_api/ --client axios --useUnionTypes"
+    "gen": "npx openapi --input /Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json --output ./src/_api/ --client axios --useUnionTypes",
+    "gen-client": "kiota generate -l typescript -d \"/Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json\" -o ./generated-client\n"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -22,6 +23,7 @@
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.7",
+    "@reduxjs/toolkit": "^2.6.1",
     "aurelia-framework": "^1.4.1",
     "axios": "^1.8.4",
     "draft-js": "^0.11.7",

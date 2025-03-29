@@ -11,6 +11,7 @@ import {isNotNullOrEmpty} from "./Helpers/StringHelper.ts";
 import {isNotNullOrUndefined} from "./Helpers/Guard.ts";
 import {RegistrationTypeObject} from "../generated-client/models";
 import Client from "./ApiClient.ts";
+import {styled} from "@mui/material/styles";
 
 function App() {
     React.useEffect(() => {
@@ -26,6 +27,18 @@ function App() {
         };
         apiFetch().finally();
     }, []);
+
+    const Root = styled('div')(({ theme }) => ({
+        width: '100%',
+        height: '100vh',
+        backgroundColor: theme.palette.background.paper,
+        ...theme.typography.body2,
+        color: (theme.cssVariables || theme).palette.text.secondary,
+        '& > :not(style) ~ :not(style)': {
+            marginTop: theme.spacing(2),
+        },
+    }));
+
 
     const CheckSession = (interval = 300000) => {
         React.useEffect(() => {
@@ -57,11 +70,7 @@ function App() {
         },
         { path: "*", element: <NotFoundPage /> }, // Catch-all 404 page
     ]);
-  return (
-    <>
-        <RouterProvider router={router} />
-    </>
-  )
+    return <Root><RouterProvider router={router} /></Root>
 }
 
 export default App

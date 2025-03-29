@@ -7,8 +7,27 @@ export const Texts: IText[] = [{
     Texts: [{
         Language: LanguageEnum.English,
         Text: "Welcome"
-    },{
+    }, {
         Language: LanguageEnum.Japanese,
         Text: "Welcome"
-    }]
+    }],
+    }, {
+    Name: EnumText.Ok,
+        Texts: [{
+            Language: LanguageEnum.English,
+            Text: "Ok"
+        }, {
+            Language: LanguageEnum.Japanese,
+            Text: "Ok"
+        }],
+    },
+    {
+    Name: EnumText.Cancel,
+        Texts: [{
+            Language: LanguageEnum.English,
+            Text: "Cancel"
+        }, {
+            Language: LanguageEnum.Japanese,
+            Text: "Cancel"
+        }],
 }];

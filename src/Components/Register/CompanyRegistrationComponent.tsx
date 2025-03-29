@@ -1,10 +1,10 @@
 import * as React from "react";
 import BaseRegisterComponent from "../Shared/BaseRegisterComponent.tsx";
-import {UserRegistrationModel, RegistrationTypeObject} from "../../../generated-client/models";
+import {RegistrationModel, RegistrationTypeObject} from "../../../generated-client/models";
 import Client from "../../ApiClient.ts";
 
 const CompanyRegistrationComponent: React.FunctionComponent  = () => {
-    const [registrationModel, setRegistrationModel] = React.useState({} as UserRegistrationModel);
+    const [registrationModel, setRegistrationModel] = React.useState<RegistrationModel>({});
 
     const onCancelPress = (): void => {
 
@@ -12,13 +12,13 @@ const CompanyRegistrationComponent: React.FunctionComponent  = () => {
 
     const onRegisterPress = () => {
         registrationModel.type = RegistrationTypeObject.Company;
-        const result = Client.instance.api.auth.register.post(registrationModel);
+        const result = Client.instance.api.user.register.post(registrationModel);
         result.then((result) => {
             console.log(result);
         })
     }
 
-    const onChange = (value: UserRegistrationModel): void => {
+    const onChange = (value: RegistrationModel): void => {
         setRegistrationModel(value);
     };
 

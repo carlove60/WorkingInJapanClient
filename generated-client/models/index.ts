@@ -152,20 +152,11 @@ export function createLoginModelFromDiscriminatorValue(parseNode: ParseNode | un
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {MessageListActionResult}
+ * @returns {RegistrationModel}
  */
 // @ts-ignore
-export function createMessageListActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoMessageListActionResult;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {MessageListResultObject}
- */
-// @ts-ignore
-export function createMessageListResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoMessageListResultObject;
+export function createRegistrationModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoRegistrationModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -175,24 +166,6 @@ export function createMessageListResultObjectFromDiscriminatorValue(parseNode: P
 // @ts-ignore
 export function createResumeModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoResumeModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {StringActionResult}
- */
-// @ts-ignore
-export function createStringActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoStringActionResult;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {StringResultObject}
- */
-// @ts-ignore
-export function createStringResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoStringResultObject;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -220,15 +193,6 @@ export function createUserModelFromDiscriminatorValue(parseNode: ParseNode | und
 // @ts-ignore
 export function createUserModelResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoUserModelResultObject;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UserRegistrationModel}
- */
-// @ts-ignore
-export function createUserRegistrationModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUserRegistrationModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -383,25 +347,13 @@ export function deserializeIntoLoginModel(loginModel: Partial<LoginModel> | unde
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoMessageListActionResult(messageListActionResult: Partial<MessageListActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoRegistrationModel(registrationModel: Partial<RegistrationModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "result": n => { messageListActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { messageListActionResult.value = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoMessageListResultObject(messageListResultObject: Partial<MessageListResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "httpErrorCode": n => { messageListResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { messageListResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { messageListResultObject.isError = n.getBooleanValue(); },
-        "records": n => { messageListResultObject.records = n.getCollectionOfObjectValues<MessageListActionResult>(createMessageListActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { messageListResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { messageListResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "confirmEmail": n => { registrationModel.confirmEmail = n.getStringValue(); },
+        "confirmPassword": n => { registrationModel.confirmPassword = n.getStringValue(); },
+        "email": n => { registrationModel.email = n.getStringValue(); },
+        "password": n => { registrationModel.password = n.getStringValue(); },
+        "type": n => { registrationModel.type = n.getEnumValue<RegistrationType>(RegistrationTypeObject); },
     }
 }
 /**
@@ -423,42 +375,16 @@ export function deserializeIntoResumeModel(resumeModel: Partial<ResumeModel> | u
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoStringActionResult(stringActionResult: Partial<StringActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "result": n => { stringActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { stringActionResult.value = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoStringResultObject(stringResultObject: Partial<StringResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "httpErrorCode": n => { stringResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { stringResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { stringResultObject.isError = n.getBooleanValue(); },
-        "records": n => { stringResultObject.records = n.getCollectionOfObjectValues<StringActionResult>(createStringActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { stringResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { stringResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
 export function deserializeIntoUserModel(userModel: Partial<UserModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "address": n => { userModel.address = n.getObjectValue<AddressModel>(createAddressModelFromDiscriminatorValue); },
         "dateOfBirth": n => { userModel.dateOfBirth = n.getDateValue(); },
         "email": n => { userModel.email = n.getStringValue(); },
-        "emailConfirmed": n => { userModel.emailConfirmed = n.getStringValue(); },
         "englishLevel": n => { userModel.englishLevel = n.getEnumValue<LanguageLevel>(LanguageLevelObject); },
         "firstName": n => { userModel.firstName = n.getStringValue(); },
         "id": n => { userModel.id = n.getGuidValue(); },
         "identityUser": n => { userModel.identityUser = n.getObjectValue<IdentityUser>(createIdentityUserFromDiscriminatorValue); },
+        "identityUserId": n => { userModel.identityUserId = n.getStringValue(); },
         "isLoggedIn": n => { userModel.isLoggedIn = n.getBooleanValue(); },
         "japaneseLevel": n => { userModel.japaneseLevel = n.getEnumValue<LanguageLevel>(LanguageLevelObject); },
         "jlpt": n => { userModel.jlpt = n.getEnumValue<JLPT>(JLPTObject); },
@@ -496,20 +422,6 @@ export function deserializeIntoUserModelResultObject(userModelResultObject: Part
         "records": n => { userModelResultObject.records = n.getCollectionOfObjectValues<UserModelActionResult>(createUserModelActionResultFromDiscriminatorValue); },
         "systemMessages": n => { userModelResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
         "userMessages": n => { userModelResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUserRegistrationModel(userRegistrationModel: Partial<UserRegistrationModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "confirmEmail": n => { userRegistrationModel.confirmEmail = n.getStringValue(); },
-        "confirmPassword": n => { userRegistrationModel.confirmPassword = n.getStringValue(); },
-        "email": n => { userRegistrationModel.email = n.getStringValue(); },
-        "password": n => { userRegistrationModel.password = n.getStringValue(); },
-        "type": n => { userRegistrationModel.type = n.getEnumValue<RegistrationType>(RegistrationTypeObject); },
     }
 }
 /**
@@ -667,43 +579,29 @@ export interface LoginModel extends Parsable {
      */
     remember?: boolean | null;
 }
-export interface MessageListActionResult extends Parsable {
-    /**
-     * The result property
-     */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: ValidationMessage[] | null;
-}
-export interface MessageListResultObject extends Parsable {
-    /**
-     * The httpErrorCode property
-     */
-    httpErrorCode?: number | null;
-    /**
-     * The httpErrorMessage property
-     */
-    httpErrorMessage?: string | null;
-    /**
-     * The isError property
-     */
-    isError?: boolean | null;
-    /**
-     * The records property
-     */
-    records?: MessageListActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
-}
 export type MessageType = (typeof MessageTypeObject)[keyof typeof MessageTypeObject];
+export interface RegistrationModel extends Parsable {
+    /**
+     * The confirmEmail property
+     */
+    confirmEmail?: string | null;
+    /**
+     * The confirmPassword property
+     */
+    confirmPassword?: string | null;
+    /**
+     * The email property
+     */
+    email?: string | null;
+    /**
+     * The password property
+     */
+    password?: string | null;
+    /**
+     * The type property
+     */
+    type?: RegistrationType | null;
+}
 export type RegistrationType = (typeof RegistrationTypeObject)[keyof typeof RegistrationTypeObject];
 export interface ResumeModel extends Parsable {
     /**
@@ -853,25 +751,13 @@ export function serializeLoginModel(writer: SerializationWriter, loginModel: Par
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeMessageListActionResult(writer: SerializationWriter, messageListActionResult: Partial<MessageListActionResult> | undefined | null = {}) : void {
-    if (messageListActionResult) {
-        writer.writeObjectValue<ActionResult>("result", messageListActionResult.result, serializeActionResult);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("value", messageListActionResult.value, serializeValidationMessage);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeMessageListResultObject(writer: SerializationWriter, messageListResultObject: Partial<MessageListResultObject> | undefined | null = {}) : void {
-    if (messageListResultObject) {
-        writer.writeNumberValue("httpErrorCode", messageListResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", messageListResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", messageListResultObject.isError);
-        writer.writeCollectionOfObjectValues<MessageListActionResult>("records", messageListResultObject.records, serializeMessageListActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", messageListResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", messageListResultObject.userMessages, serializeValidationMessage);
+export function serializeRegistrationModel(writer: SerializationWriter, registrationModel: Partial<RegistrationModel> | undefined | null = {}) : void {
+    if (registrationModel) {
+        writer.writeStringValue("confirmEmail", registrationModel.confirmEmail);
+        writer.writeStringValue("confirmPassword", registrationModel.confirmPassword);
+        writer.writeStringValue("email", registrationModel.email);
+        writer.writeStringValue("password", registrationModel.password);
+        writer.writeEnumValue<RegistrationType>("type", registrationModel.type);
     }
 }
 /**
@@ -893,42 +779,16 @@ export function serializeResumeModel(writer: SerializationWriter, resumeModel: P
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeStringActionResult(writer: SerializationWriter, stringActionResult: Partial<StringActionResult> | undefined | null = {}) : void {
-    if (stringActionResult) {
-        writer.writeObjectValue<ActionResult>("result", stringActionResult.result, serializeActionResult);
-        writer.writeStringValue("value", stringActionResult.value);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeStringResultObject(writer: SerializationWriter, stringResultObject: Partial<StringResultObject> | undefined | null = {}) : void {
-    if (stringResultObject) {
-        writer.writeNumberValue("httpErrorCode", stringResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", stringResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", stringResultObject.isError);
-        writer.writeCollectionOfObjectValues<StringActionResult>("records", stringResultObject.records, serializeStringActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", stringResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", stringResultObject.userMessages, serializeValidationMessage);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
 export function serializeUserModel(writer: SerializationWriter, userModel: Partial<UserModel> | undefined | null = {}) : void {
     if (userModel) {
         writer.writeObjectValue<AddressModel>("address", userModel.address, serializeAddressModel);
         writer.writeDateValue("dateOfBirth", userModel.dateOfBirth);
         writer.writeStringValue("email", userModel.email);
-        writer.writeStringValue("emailConfirmed", userModel.emailConfirmed);
         writer.writeEnumValue<LanguageLevel>("englishLevel", userModel.englishLevel);
         writer.writeStringValue("firstName", userModel.firstName);
         writer.writeGuidValue("id", userModel.id);
         writer.writeObjectValue<IdentityUser>("identityUser", userModel.identityUser, serializeIdentityUser);
+        writer.writeStringValue("identityUserId", userModel.identityUserId);
         writer.writeBooleanValue("isLoggedIn", userModel.isLoggedIn);
         writer.writeEnumValue<LanguageLevel>("japaneseLevel", userModel.japaneseLevel);
         writer.writeEnumValue<JLPT>("jlpt", userModel.jlpt);
@@ -973,20 +833,6 @@ export function serializeUserModelResultObject(writer: SerializationWriter, user
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeUserRegistrationModel(writer: SerializationWriter, userRegistrationModel: Partial<UserRegistrationModel> | undefined | null = {}) : void {
-    if (userRegistrationModel) {
-        writer.writeStringValue("confirmEmail", userRegistrationModel.confirmEmail);
-        writer.writeStringValue("confirmPassword", userRegistrationModel.confirmPassword);
-        writer.writeStringValue("email", userRegistrationModel.email);
-        writer.writeStringValue("password", userRegistrationModel.password);
-        writer.writeEnumValue<RegistrationType>("type", userRegistrationModel.type);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
 export function serializeValidationMessage(writer: SerializationWriter, validationMessage: Partial<ValidationMessage> | undefined | null = {}) : void {
     if (validationMessage) {
         writer.writeStringValue("messageEnglish", validationMessage.messageEnglish);
@@ -1020,42 +866,6 @@ export function serializeValidationMessageResultObject(writer: SerializationWrit
         writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", validationMessageResultObject.userMessages, serializeValidationMessage);
     }
 }
-export interface StringActionResult extends Parsable {
-    /**
-     * The result property
-     */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: string | null;
-}
-export interface StringResultObject extends Parsable {
-    /**
-     * The httpErrorCode property
-     */
-    httpErrorCode?: number | null;
-    /**
-     * The httpErrorMessage property
-     */
-    httpErrorMessage?: string | null;
-    /**
-     * The isError property
-     */
-    isError?: boolean | null;
-    /**
-     * The records property
-     */
-    records?: StringActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
-}
 export interface UserModel extends Parsable {
     /**
      * The address property
@@ -1069,10 +879,6 @@ export interface UserModel extends Parsable {
      * The email property
      */
     email?: string | null;
-    /**
-     * The emailConfirmed property
-     */
-    emailConfirmed?: string | null;
     /**
      * The englishLevel property
      */
@@ -1089,6 +895,10 @@ export interface UserModel extends Parsable {
      * The identityUser property
      */
     identityUser?: IdentityUser | null;
+    /**
+     * The identityUserId property
+     */
+    identityUserId?: string | null;
     /**
      * The isLoggedIn property
      */
@@ -1170,28 +980,6 @@ export interface UserModelResultObject extends Parsable {
      */
     userMessages?: ValidationMessage[] | null;
 }
-export interface UserRegistrationModel extends Parsable {
-    /**
-     * The confirmEmail property
-     */
-    confirmEmail?: string | null;
-    /**
-     * The confirmPassword property
-     */
-    confirmPassword?: string | null;
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The password property
-     */
-    password?: string | null;
-    /**
-     * The type property
-     */
-    type?: RegistrationType | null;
-}
 export interface ValidationMessage extends Parsable {
     /**
      * The messageEnglish property
@@ -1264,9 +1052,10 @@ export const LanguageObject = {
     English: "English",
 } as const;
 export const MessageTypeObject = {
-    Warning: "Warning",
-    ErrorEscaped: "Error",
-    Info: "Info",
+    Success: "success",
+    Info: "info",
+    Warning: "warning",
+    ErrorEscaped: "error",
 } as const;
 export const RegistrationTypeObject = {
     User: "User",

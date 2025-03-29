@@ -7,5 +7,5 @@ export const isNullOrEmpty = (value: NullableString): boolean => {
 };
 
 export const isNotNullOrEmpty = (value: NullableString): boolean => {
-    return isNotNullOrUndefined(value) && value.trim() === "";
+    return isNotNullOrUndefined(value) && value.trim() !== "";
 };

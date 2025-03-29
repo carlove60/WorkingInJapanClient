@@ -1,9 +1,9 @@
-import {Middleware} from "@microsoft/kiota-http-fetchlibrary";
-import {store} from "../store.ts";
+import { Middleware } from "@microsoft/kiota-http-fetchlibrary";
 import {add} from "../Components/Error/ErrorSlice.ts";
+import {store} from "../store.ts";
 import {MessageTypeObject} from "../../generated-client/models";
 
-export class AuthMiddleware implements Middleware {
+export class ResultMiddleware implements Middleware {
     next: Middleware | undefined;
 
     public async execute(
@@ -11,22 +11,7 @@ export class AuthMiddleware implements Middleware {
         requestInit: RequestInit
     ): Promise<Response> {
         try {
-            const token = localStorage.getItem("token");
-            if (token) {
-                requestInit.headers = {
-                    ...requestInit.headers,
-                    Authorization: `Bearer ${token}`,
-                };
-            }
-
-            // Send request
             const response = await fetch(url, requestInit);
-
-            // Capture and store new token if present in response headers
-            const newToken = response.headers.get("New-Token");
-            if (newToken) {
-                localStorage.setItem("token", newToken);
-            }
 
             if (!response.ok) {
                 // Handle unexpected status codes
@@ -46,7 +31,7 @@ export class AuthMiddleware implements Middleware {
                 error instanceof Error ? error.message : "An unknown error occurred";
 
             // Dispatch error to Redux
-            store.dispatch(add({message: errorMessage, type: MessageTypeObject.ErrorEscaped}));
+            store.dispatch(add({message: errorMessage, type: MessageTypeObject.ErrorEscaped }));
 
             console.error("Network/API Error:", errorMessage);
             throw error; // Re-throw so the calling function can still catch it

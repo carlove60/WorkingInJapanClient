@@ -5,16 +5,17 @@ import {EnumText} from "../../Enums/EnumTextName.ts";
 import {FieldType} from "../../Interfaces/FieldType.ts";
 import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
-import {UserRegistrationModel} from "../../../generated-client/models";
+import {RegistrationModel} from "../../../generated-client/models";
+import Box from "@mui/material/Box";
 
 export interface IRegisterProps {
     onRegisterPressCallback?: () => void,
     onCancelPressCallback?: () => void,
-    onChange: (model: UserRegistrationModel) => void
+    onChange: (model: RegistrationModel) => void
 }
 
 const BaseRegisterComponent = ({onRegisterPressCallback, onCancelPressCallback, onChange}: IRegisterProps) => {
-    const { model: registrationModel, updateModel: setRegistrationModel } = useUpdateModel<UserRegistrationModel>({} as UserRegistrationModel);
+    const { model: registrationModel, updateModel: setRegistrationModel } = useUpdateModel<RegistrationModel>({});
 
     React.useEffect(() => {
         onChange(registrationModel);
@@ -32,6 +33,12 @@ const BaseRegisterComponent = ({onRegisterPressCallback, onCancelPressCallback, 
         }
     };
     return (
+        <Box
+            component="form"
+            sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
+            noValidate
+            autoComplete="off"
+        >
         <div>
             <FieldComponent type={FieldType.Text} value={registrationModel.email} onChange={(value) => setRegistrationModel("email" ,value)} label={EnumText.Email} />
             <FieldComponent type={FieldType.Text} value={registrationModel.confirmEmail} onChange={(value) => setRegistrationModel("confirmEmail", value)} label={EnumText.EmailConfirm} />
@@ -40,6 +47,7 @@ const BaseRegisterComponent = ({onRegisterPressCallback, onCancelPressCallback, 
             <ButtonComponent text={EnumText.Ok} onPress={onRegisterPress} />
             <ButtonComponent text={EnumText.Cancel} onPress={onCancelPress} />
         </div>
+        </Box>
     )
 }
 

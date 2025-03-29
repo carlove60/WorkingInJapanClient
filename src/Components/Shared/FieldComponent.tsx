@@ -5,6 +5,7 @@ import DraftEditor from "./DraftJs.tsx";
 import {EnumText} from "../../Enums/EnumTextName.ts";
 import {getTranslatedText} from "../../Helpers/TextHelper.ts";
 import {LanguageEnum} from "../../Interfaces/ITranslatedText.ts";
+import {TextField} from "@mui/material";
 
 interface Props {
     type: FieldType;
@@ -18,23 +19,23 @@ const FieldComponent = ({type, label, value, onChange, readOnly} : Props) => {
     const onContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (Guard.isNotNullOrUndefined(onChange) && !readOnly) {
-            onChange(value as string);
+            onChange(e.currentTarget.value);
         }
-    }
-
-    if (type === FieldType.Html) {
-       return <DraftEditor content={value as string} onChange={onChange} />
     }
 
     const labelText = (): string => {
         if (Guard.isNotNullOrUndefined(label)) {
-            return getTranslatedText(EnumText.Welcome, LanguageEnum.English) ?? "";
+            return getTranslatedText(label, LanguageEnum.English) ?? "";
         }
 
         return "Label";
     };
 
-    return <div aria-label={labelText()} onChange={onContentChange}>{value}</div>
+    if (type === FieldType.Html) {
+        return <DraftEditor content={value as string} onChange={onChange} />
+    }
+
+    return <TextField variant={"standard"} style={{display: "flex"}} id="outlined-basic" label={labelText()} onChange={onContentChange} value={value} />;
 };
 
 export default FieldComponent;
