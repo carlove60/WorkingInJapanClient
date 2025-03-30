@@ -1,4 +1,4 @@
-import {ApiClient, createApiClient} from "../generated-client/apiClient.ts";
+import {ApiClient, createApiClient} from "../generated-api/apiClient.ts";
 import { AuthMiddleware } from "./Middleware/AuthMiddleware.ts";
 import {AuthenticationProvider, RequestInformation} from "@microsoft/kiota-abstractions";
 import {FetchRequestAdapter, HttpClient, Middleware} from "@microsoft/kiota-http-fetchlibrary";

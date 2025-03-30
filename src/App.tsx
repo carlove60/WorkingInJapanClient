@@ -9,7 +9,7 @@ import Paths from "./Constants/Paths.ts";
 import * as React from "react";
 import {isNotNullOrEmpty} from "./Helpers/StringHelper.ts";
 import {isNotNullOrUndefined} from "./Helpers/Guard.ts";
-import {RegistrationTypeObject} from "../generated-client/models";
+import {RegistrationTypeObject} from "../generated-api/models";
 import Client from "./ApiClient.ts";
 import {styled} from "@mui/material/styles";
 

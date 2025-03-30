@@ -5,8 +5,9 @@ import {EnumText} from "../../Enums/EnumTextName.ts";
 import {FieldType} from "../../Interfaces/FieldType.ts";
 import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
-import {RegistrationModel} from "../../../generated-client/models";
+import {RegistrationModel} from "../../../generated-api/models";
 import Box from "@mui/material/Box";
+import {RegistrationValidator} from "../../Validators/RegistrationValidator.ts";
 
 export interface IRegisterProps {
     onRegisterPressCallback?: () => void,
@@ -15,7 +16,7 @@ export interface IRegisterProps {
 }
 
 const BaseRegisterComponent = ({onRegisterPressCallback, onCancelPressCallback, onChange}: IRegisterProps) => {
-    const { model: registrationModel, updateModel: setRegistrationModel } = useUpdateModel<RegistrationModel>({});
+    const { model: registrationModel, updateModel: setRegistrationModel, validationMessages } = useUpdateModel<RegistrationModel>({}, new RegistrationValidator());
 
     React.useEffect(() => {
         onChange(registrationModel);

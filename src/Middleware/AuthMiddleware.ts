@@ -1,7 +1,7 @@
 import {Middleware} from "@microsoft/kiota-http-fetchlibrary";
 import {store} from "../store.ts";
-import {add} from "../Components/Error/ErrorSlice.ts";
-import {MessageTypeObject} from "../../generated-client/models";
+import {add} from "../Components/Error/BubbleSlice.ts";
+import {MessageTypeObject} from "../../generated-api/models";
 
 export class AuthMiddleware implements Middleware {
     next: Middleware | undefined;

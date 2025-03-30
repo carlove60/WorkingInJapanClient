@@ -1,7 +1,7 @@
 import { Middleware } from "@microsoft/kiota-http-fetchlibrary";
-import {add} from "../Components/Error/ErrorSlice.ts";
+import {add} from "../Components/Error/BubbleSlice.ts";
 import {store} from "../store.ts";
-import {MessageTypeObject} from "../../generated-client/models";
+import {MessageTypeObject} from "../../generated-api/models";
 
 export class ResultMiddleware implements Middleware {
     next: Middleware | undefined;
@@ -44,9 +44,8 @@ export class ResultMiddleware implements Middleware {
             if (contentType && contentType.includes("application/json")) {
                 const errorBody = await response.json();
                 return errorBody.message || `Error ${response.status}`;
-            } else {
-                return await response.text();
             }
+            return await response.text();
         } catch {
             return `Unexpected error ${response.status}`;
         }

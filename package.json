@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "gen": "npx openapi --input /Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json --output ./src/_api/ --client axios --useUnionTypes",
-    "gen-client": "kiota generate -l typescript -d \"/Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json\" -o ./generated-client\n"
+    "gen-client": "kiota generate -l typescript -d \"/Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json\" -o ./generated-api\n"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

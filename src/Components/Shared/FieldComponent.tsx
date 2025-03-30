@@ -13,9 +13,10 @@ interface Props {
     value: string | null | undefined;
     onChange?: (value: string) => void | undefined;
     readOnly?: boolean;
+    autoComplete?: string;
 }
 
-const FieldComponent = ({type, label, value, onChange, readOnly} : Props) => {
+const FieldComponent = ({type, label, value, onChange, readOnly, autoComplete} : Props) => {
     const onContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (Guard.isNotNullOrUndefined(onChange) && !readOnly) {
@@ -35,7 +36,7 @@ const FieldComponent = ({type, label, value, onChange, readOnly} : Props) => {
         return <DraftEditor content={value as string} onChange={onChange} />
     }
 
-    return <TextField variant={"standard"} style={{display: "flex"}} id="outlined-basic" label={labelText()} onChange={onContentChange} value={value} />;
+    return <TextField autoComplete={autoComplete} variant={"standard"} type={FieldType[type]} style={{display: "flex"}} id="outlined-basic" label={labelText()} onChange={onContentChange} value={value} />;
 };
 
 export default FieldComponent;

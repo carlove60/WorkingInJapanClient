@@ -17,7 +17,7 @@ import MobileMenuComponent from "./MobileMenuComponent.tsx";
 import MenuComponent from "./MenuComponent.tsx";
 import {Provider} from "react-redux";
 import {store} from "../../store.ts";
-import ErrorComponent from "../Error/InformationComponent.tsx";
+import ErrorComponent from "../Error/BubbleComponent.tsx";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',

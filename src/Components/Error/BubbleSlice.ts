@@ -1,23 +1,23 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {MessageType} from "../../../generated-client/models";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {MessageType} from "../../../generated-api/models";
 
-export interface InfoObjectType {
+export interface IBubble {
     message: string | null | undefined,
     type: MessageType | null | undefined
 }
 interface ErrorState {
-    messages: InfoObjectType[];
+    messages: IBubble[];
 }
 
 const initialState: ErrorState = {
     messages: [],
 };
 
-const errorSlice = createSlice({
+const bubbleSlice = createSlice({
     name: "error",
     initialState,
     reducers: {
-        add: (state, action: PayloadAction<InfoObjectType>) => {
+        add: (state, action: PayloadAction<IBubble>) => {
             const errorExists = state.messages.filter((message) =>
                 message.message === action.payload.message &&
                 message.type && action.payload.type )[0];
@@ -26,11 +26,10 @@ const errorSlice = createSlice({
             }
         },
         clearBubble: (state, action: PayloadAction<MessageType>) => {
-            const bubblesToKeep = state.messages.filter((message) => message.type !== action.type);
-            state.messages = bubblesToKeep;
+            state.messages = state.messages.filter((message) => message.type !== action.payload);
         },
     },
 });
 
-export const { add, clearBubble } = errorSlice.actions;
-export default errorSlice.reducer;
+export const { add, clearBubble } = bubbleSlice.actions;
+export default bubbleSlice.reducer;

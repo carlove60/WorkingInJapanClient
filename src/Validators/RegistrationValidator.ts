@@ -1,16 +1,23 @@
 import {isNullOrUndefined} from "../Helpers/Guard.ts";
 import {Texts} from "../Constants/Texts.ts";
 import {EnumText} from "../Enums/EnumTextName.ts";
-import IText from "../Interfaces/IText.ts";
-import {UserRegistrationModel} from "../../generated-client/models";
+import {MessageTypeObject, RegistrationModel, ValidationMessage} from "../../generated-api/models";
+import {LanguageEnum} from "../Interfaces/ITranslatedText.ts";
+import {Validator} from "../Interfaces/Validator.ts";
 
+export class RegistrationValidator implements Validator<RegistrationModel> {
+    public validate(registrationModel: RegistrationModel): ValidationMessage[] {
+        const validationMessages: ValidationMessage[] = [];
+        if (isNullOrUndefined(registrationModel)) {
+            const emptyRegistrationMessage = Texts.filter((text) => text.Name == EnumText.Register)[0];
+            const validationMessage: ValidationMessage = {
+                type: MessageTypeObject.ErrorEscaped,
+                messageJapanese: emptyRegistrationMessage.Texts.filter((text) => text.Language === LanguageEnum.Japanese)[0].Text,
+                messageEnglish: emptyRegistrationMessage.Texts.filter((text) => text.Language === LanguageEnum.English)[0].Text
+            };
+            validationMessages.push(validationMessage);
+        }
 
-export const validateRegistration = (registrationModel: UserRegistrationModel): IText[] => {
-    const validationMessages: IText[] = [];
-    if (isNullOrUndefined(registrationModel)) {
-        const emptyUserRegistrationmessage = Texts.filter((text) => text.Name == EnumText.Register)[0];
-        validationMessages.push(emptyUserRegistrationmessage);
-    }
-
-    return validationMessages;
-};
+        return validationMessages;
+    };
+}

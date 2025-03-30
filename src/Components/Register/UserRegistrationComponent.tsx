@@ -1,8 +1,8 @@
 import * as React from "react";
 import BaseRegisterComponent from "../Shared/BaseRegisterComponent.tsx";
-import {RegistrationTypeObject, RegistrationModel} from "../../../generated-client/models";
+import {RegistrationTypeObject, RegistrationModel} from "../../../generated-api/models";
 import Client from "../../ApiClient.ts";
-import {add} from "../Error/ErrorSlice.ts";
+import {add} from "../Error/BubbleSlice.ts";
 import {store} from "../../store.ts";
 
 const UserRegistrationComponent: React.FunctionComponent  = () => {

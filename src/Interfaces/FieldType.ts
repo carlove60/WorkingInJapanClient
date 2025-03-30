@@ -5,5 +5,6 @@ export enum FieldType {
     Html,
     Number,
     Byte,
-    Object
+    Object,
+    Password
 }

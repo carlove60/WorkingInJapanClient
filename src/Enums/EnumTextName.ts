@@ -6,6 +6,7 @@ export enum EnumText {
     Continue,
     Login,
     Register,
+    EmptyRegisterModel,
     FirstName,
     LastName,
     Email,
@@ -13,6 +14,9 @@ export enum EnumText {
     Password,
     PasswordConfirm,
     UndefinedModel,
-    Welcome
+    Welcome,
+    InvalidLengthPassword,
+    InvalidComplexityPassword,
+    InvalidCapitalPassword,
 
 }
