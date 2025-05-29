@@ -1,12 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {MessageType} from "../../../generated-api/models";
+import {MessageType, ValidationMessage} from "../../../generated-api/models";
 
-export interface IBubble {
-    message: string | null | undefined,
-    type: MessageType | null | undefined
-}
 interface ErrorState {
-    messages: IBubble[];
+    messages: ValidationMessage[];
 }
 
 const initialState: ErrorState = {
@@ -17,7 +13,7 @@ const bubbleSlice = createSlice({
     name: "error",
     initialState,
     reducers: {
-        add: (state, action: PayloadAction<IBubble>) => {
+        add: (state, action: PayloadAction<ValidationMessage>) => {
             const errorExists = state.messages.filter((message) =>
                 message.message === action.payload.message &&
                 message.type && action.payload.type )[0];

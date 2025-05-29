@@ -15,9 +15,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MobileMenuComponent from "./MobileMenuComponent.tsx";
 import MenuComponent from "./MenuComponent.tsx";
-import {Provider} from "react-redux";
-import {store} from "../../store.ts";
-import ErrorComponent from "../Error/BubbleComponent.tsx";
+import ErrorComponent from "../Error/ErrorComponent.tsx";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -59,7 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const PrimarySearchAppBar = () => {
+const NavBar = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -160,11 +158,9 @@ const PrimarySearchAppBar = () => {
             </AppBar>
             {<MobileMenuComponent mobileMoreAnchorEl={mobileMoreAnchorEl} mobileMenuId={mobileMenuId} handleMobileMenuClose={handleMobileMenuClose} handleProfileMenuOpen={handleProfileMenuOpen} />}
             {<MenuComponent menuId={menuId} handleMenuClose={handleMenuClose} isMenuOpen={isMenuOpen} anchorEl={anchorEl} />}
-            <Provider store={store}>
-                <ErrorComponent />
-            </Provider>
+            {<ErrorComponent />}
         </Box>
     );
 }
 
-export default PrimarySearchAppBar;
+export default NavBar;

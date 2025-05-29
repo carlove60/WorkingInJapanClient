@@ -1,21 +1,21 @@
-import {IBubble} from "../Components/Error/BubbleSlice.ts";
+import {ValidationMessage} from "../GeneratedClient";
 
 
-export const groupMessages = (messages: IBubble[])=> {
+export const groupMessages = (messages: ValidationMessage[])=> {
     if (!messages || !messages.length) {
         return null;
     }
-    return messages.reduce<Record<string, IBubble[]>>((acc, message) => {
+    return messages.reduce<Record<string, ValidationMessage[]>>((groupedMessages, message) => {
         const {type} = message;
 
-        if (type && !acc[type]) {
-            acc[type] = [];
+        if (type && !groupedMessages[type]) {
+            groupedMessages[type] = [];
         }
 
         if (type) {
-            acc[type].push(message);
+            groupedMessages[type].push(message);
         }
 
-        return acc;
+        return groupedMessages;
     }, {});
 }

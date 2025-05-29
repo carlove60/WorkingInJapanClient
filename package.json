@@ -8,8 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "gen": "npx openapi --input /Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json --output ./src/_api/ --client axios --useUnionTypes",
-    "gen-client": "kiota generate -l typescript -d \"/Users/carlove/RiderProjects/Eeckhoven/Eeckhoven/swaggerfile.json\" -o ./generated-api\n"
+    "gen": "openapi-generator-cli generate  -i ./swaggerfile.json  -g typescript-fetch -o src/GeneratedClient  --additional-properties=supportsES6=true,strictRequiredProps=true,operationIdNaming=camelCase",
+    "gen-orval": "orval --input ./swaggerfile.json --output src/GeneratedClient/Api.ts",
+    "gen-openapi": "npx openapi --input ./swaggerfile.json --output ./src/_api/ --client axios --useUnionTypes --additional-properties=supportsES6=true,strictRequiredProps=true",
+    "gen-client": "kiota generate -l typescript -d \"./swaggerfile.json\" -o ./generated-api\n"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -31,6 +33,7 @@
     "kiota-serialization-json": "^0.0.1-security",
     "openapi-typescript-codegen": "^0.29.0",
     "react": "^19.0.0",
+    "react-admin": "^5.7.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.3.0",
@@ -38,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@openapitools/openapi-generator-cli": "^2.20.2",
     "@types/draft-js": "^0.11.18",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -46,6 +50,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "orval": "^7.9.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"

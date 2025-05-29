@@ -4,204 +4,79 @@
 // @ts-ignore
 import { type Guid, type Parsable, type ParseNode, type SerializationWriter } from '@microsoft/kiota-abstractions';
 
-export interface ActionResult extends Parsable {
+export interface AddToQueueRequest extends Parsable {
 }
-export interface AddressModel extends Parsable {
+export interface AddToQueueResponse extends Parsable {
     /**
-     * The city property
+     * The result property
      */
-    city?: string | null;
-    /**
-     * The country property
-     */
-    country?: string | null;
+    result?: PartyModelResultObject | null;
+}
+export interface CheckInRequest extends Parsable {
     /**
      * The id property
      */
     id?: Guid | null;
-    /**
-     * The state property
-     */
-    state?: string | null;
-    /**
-     * The street property
-     */
-    street?: string | null;
-    /**
-     * The zipCode property
-     */
-    zipCode?: string | null;
 }
-export interface BooleanActionResult extends Parsable {
+export interface CheckInResponse extends Parsable {
     /**
      * The result property
      */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: boolean | null;
-}
-export interface BooleanResultObject extends Parsable {
-    /**
-     * The httpErrorCode property
-     */
-    httpErrorCode?: number | null;
-    /**
-     * The httpErrorMessage property
-     */
-    httpErrorMessage?: string | null;
-    /**
-     * The isError property
-     */
-    isError?: boolean | null;
-    /**
-     * The records property
-     */
-    records?: BooleanActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
+    result?: PartyModelResultObject | null;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ActionResult}
+ * @returns {AddToQueueRequest}
  */
 // @ts-ignore
-export function createActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoActionResult;
+export function createAddToQueueRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoAddToQueueRequest;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {AddressModel}
+ * @returns {AddToQueueResponse}
  */
 // @ts-ignore
-export function createAddressModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoAddressModel;
+export function createAddToQueueResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoAddToQueueResponse;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {BooleanActionResult}
+ * @returns {CheckInRequest}
  */
 // @ts-ignore
-export function createBooleanActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoBooleanActionResult;
+export function createCheckInRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoCheckInRequest;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {BooleanResultObject}
+ * @returns {CheckInResponse}
  */
 // @ts-ignore
-export function createBooleanResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoBooleanResultObject;
+export function createCheckInResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoCheckInResponse;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IActionResultActionResult}
+ * @returns {PartyModel}
  */
 // @ts-ignore
-export function createIActionResultActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIActionResultActionResult;
+export function createPartyModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoPartyModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IActionResult}
+ * @returns {PartyModelResultObject}
  */
 // @ts-ignore
-export function createIActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIActionResult;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IActionResultResultObject}
- */
-// @ts-ignore
-export function createIActionResultResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIActionResultResultObject;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IdentityUser}
- */
-// @ts-ignore
-export function createIdentityUserFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIdentityUser;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {LoginModel}
- */
-// @ts-ignore
-export function createLoginModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoLoginModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {RegistrationModel}
- */
-// @ts-ignore
-export function createRegistrationModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoRegistrationModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ResumeModel}
- */
-// @ts-ignore
-export function createResumeModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoResumeModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UserModelActionResult}
- */
-// @ts-ignore
-export function createUserModelActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUserModelActionResult;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UserModel}
- */
-// @ts-ignore
-export function createUserModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUserModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UserModelResultObject}
- */
-// @ts-ignore
-export function createUserModelResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUserModelResultObject;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ValidationMessageActionResult}
- */
-// @ts-ignore
-export function createValidationMessageActionResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoValidationMessageActionResult;
+export function createPartyModelResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoPartyModelResultObject;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -215,18 +90,54 @@ export function createValidationMessageFromDiscriminatorValue(parseNode: ParseNo
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ValidationMessageResultObject}
+ * @returns {WaitingListMetaDataResponse}
  */
 // @ts-ignore
-export function createValidationMessageResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoValidationMessageResultObject;
+export function createWaitingListMetaDataResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoWaitingListMetaDataResponse;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {WaitingListModel}
+ */
+// @ts-ignore
+export function createWaitingListModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoWaitingListModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {WaitingListModelResultObject}
+ */
+// @ts-ignore
+export function createWaitingListModelResultObjectFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoWaitingListModelResultObject;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {WaitingListRequest}
+ */
+// @ts-ignore
+export function createWaitingListRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoWaitingListRequest;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {WaitingListResponse}
+ */
+// @ts-ignore
+export function createWaitingListResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoWaitingListResponse;
 }
 /**
  * The deserialization information for the current model
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoActionResult(actionResult: Partial<ActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoAddToQueueRequest(addToQueueRequest: Partial<AddToQueueRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
     }
 }
@@ -235,14 +146,9 @@ export function deserializeIntoActionResult(actionResult: Partial<ActionResult> 
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoAddressModel(addressModel: Partial<AddressModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoAddToQueueResponse(addToQueueResponse: Partial<AddToQueueResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "city": n => { addressModel.city = n.getStringValue(); },
-        "country": n => { addressModel.country = n.getStringValue(); },
-        "id": n => { addressModel.id = n.getGuidValue(); },
-        "state": n => { addressModel.state = n.getStringValue(); },
-        "street": n => { addressModel.street = n.getStringValue(); },
-        "zipCode": n => { addressModel.zipCode = n.getStringValue(); },
+        "result": n => { addToQueueResponse.result = n.getObjectValue<PartyModelResultObject>(createPartyModelResultObjectFromDiscriminatorValue); },
     }
 }
 /**
@@ -250,10 +156,9 @@ export function deserializeIntoAddressModel(addressModel: Partial<AddressModel> 
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoBooleanActionResult(booleanActionResult: Partial<BooleanActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoCheckInRequest(checkInRequest: Partial<CheckInRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "result": n => { booleanActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { booleanActionResult.value = n.getBooleanValue(); },
+        "id": n => { checkInRequest.id = n.getGuidValue(); },
     }
 }
 /**
@@ -261,14 +166,9 @@ export function deserializeIntoBooleanActionResult(booleanActionResult: Partial<
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoBooleanResultObject(booleanResultObject: Partial<BooleanResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoCheckInResponse(checkInResponse: Partial<CheckInResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "httpErrorCode": n => { booleanResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { booleanResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { booleanResultObject.isError = n.getBooleanValue(); },
-        "records": n => { booleanResultObject.records = n.getCollectionOfObjectValues<BooleanActionResult>(createBooleanActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { booleanResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { booleanResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "result": n => { checkInResponse.result = n.getObjectValue<PartyModelResultObject>(createPartyModelResultObjectFromDiscriminatorValue); },
     }
 }
 /**
@@ -276,8 +176,13 @@ export function deserializeIntoBooleanResultObject(booleanResultObject: Partial<
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoIActionResult(iActionResult: Partial<IActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoPartyModel(partyModel: Partial<PartyModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
+        "id": n => { partyModel.id = n.getGuidValue(); },
+        "isReady": n => { partyModel.isReady = n.getBooleanValue(); },
+        "name": n => { partyModel.name = n.getStringValue(); },
+        "size": n => { partyModel.size = n.getNumberValue(); },
+        "waitingListModel": n => { partyModel.waitingListModel = n.getObjectValue<WaitingListModel>(createWaitingListModelFromDiscriminatorValue); },
     }
 }
 /**
@@ -285,143 +190,10 @@ export function deserializeIntoIActionResult(iActionResult: Partial<IActionResul
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoIActionResultActionResult(iActionResultActionResult: Partial<IActionResultActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoPartyModelResultObject(partyModelResultObject: Partial<PartyModelResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "result": n => { iActionResultActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { iActionResultActionResult.value = n.getObjectValue<IActionResult>(createIActionResultFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoIActionResultResultObject(iActionResultResultObject: Partial<IActionResultResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "httpErrorCode": n => { iActionResultResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { iActionResultResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { iActionResultResultObject.isError = n.getBooleanValue(); },
-        "records": n => { iActionResultResultObject.records = n.getCollectionOfObjectValues<IActionResultActionResult>(createIActionResultActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { iActionResultResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { iActionResultResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoIdentityUser(identityUser: Partial<IdentityUser> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "accessFailedCount": n => { identityUser.accessFailedCount = n.getNumberValue(); },
-        "concurrencyStamp": n => { identityUser.concurrencyStamp = n.getStringValue(); },
-        "email": n => { identityUser.email = n.getStringValue(); },
-        "emailConfirmed": n => { identityUser.emailConfirmed = n.getBooleanValue(); },
-        "id": n => { identityUser.id = n.getStringValue(); },
-        "lockoutEnabled": n => { identityUser.lockoutEnabled = n.getBooleanValue(); },
-        "lockoutEnd": n => { identityUser.lockoutEnd = n.getDateValue(); },
-        "normalizedEmail": n => { identityUser.normalizedEmail = n.getStringValue(); },
-        "normalizedUserName": n => { identityUser.normalizedUserName = n.getStringValue(); },
-        "passwordHash": n => { identityUser.passwordHash = n.getStringValue(); },
-        "phoneNumber": n => { identityUser.phoneNumber = n.getStringValue(); },
-        "phoneNumberConfirmed": n => { identityUser.phoneNumberConfirmed = n.getBooleanValue(); },
-        "securityStamp": n => { identityUser.securityStamp = n.getStringValue(); },
-        "twoFactorEnabled": n => { identityUser.twoFactorEnabled = n.getBooleanValue(); },
-        "userName": n => { identityUser.userName = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoLoginModel(loginModel: Partial<LoginModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "email": n => { loginModel.email = n.getStringValue(); },
-        "password": n => { loginModel.password = n.getStringValue(); },
-        "remember": n => { loginModel.remember = n.getBooleanValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoRegistrationModel(registrationModel: Partial<RegistrationModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "confirmEmail": n => { registrationModel.confirmEmail = n.getStringValue(); },
-        "confirmPassword": n => { registrationModel.confirmPassword = n.getStringValue(); },
-        "email": n => { registrationModel.email = n.getStringValue(); },
-        "password": n => { registrationModel.password = n.getStringValue(); },
-        "type": n => { registrationModel.type = n.getEnumValue<RegistrationType>(RegistrationTypeObject); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoResumeModel(resumeModel: Partial<ResumeModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "content": n => { resumeModel.content = n.getStringValue(); },
-        "id": n => { resumeModel.id = n.getGuidValue(); },
-        "title": n => { resumeModel.title = n.getStringValue(); },
-        "user": n => { resumeModel.user = n.getObjectValue<UserModel>(createUserModelFromDiscriminatorValue); },
-        "userId": n => { resumeModel.userId = n.getGuidValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUserModel(userModel: Partial<UserModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "address": n => { userModel.address = n.getObjectValue<AddressModel>(createAddressModelFromDiscriminatorValue); },
-        "dateOfBirth": n => { userModel.dateOfBirth = n.getDateValue(); },
-        "email": n => { userModel.email = n.getStringValue(); },
-        "englishLevel": n => { userModel.englishLevel = n.getEnumValue<LanguageLevel>(LanguageLevelObject); },
-        "firstName": n => { userModel.firstName = n.getStringValue(); },
-        "id": n => { userModel.id = n.getGuidValue(); },
-        "identityUser": n => { userModel.identityUser = n.getObjectValue<IdentityUser>(createIdentityUserFromDiscriminatorValue); },
-        "identityUserId": n => { userModel.identityUserId = n.getStringValue(); },
-        "isLoggedIn": n => { userModel.isLoggedIn = n.getBooleanValue(); },
-        "japaneseLevel": n => { userModel.japaneseLevel = n.getEnumValue<LanguageLevel>(LanguageLevelObject); },
-        "jlpt": n => { userModel.jlpt = n.getEnumValue<JLPT>(JLPTObject); },
-        "language": n => { userModel.language = n.getEnumValue<Language>(LanguageObject); },
-        "lastName": n => { userModel.lastName = n.getStringValue(); },
-        "nationality": n => { userModel.nationality = n.getStringValue(); },
-        "phoneNumber": n => { userModel.phoneNumber = n.getStringValue(); },
-        "profilePicture": n => { userModel.profilePicture = n.getStringValue(); },
-        "resume": n => { userModel.resume = n.getObjectValue<ResumeModel>(createResumeModelFromDiscriminatorValue); },
-        "role": n => { userModel.role = n.getStringValue(); },
-        "visaStatus": n => { userModel.visaStatus = n.getEnumValue<VisaStatus>(VisaStatusObject); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUserModelActionResult(userModelActionResult: Partial<UserModelActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "result": n => { userModelActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { userModelActionResult.value = n.getObjectValue<UserModel>(createUserModelFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUserModelResultObject(userModelResultObject: Partial<UserModelResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "httpErrorCode": n => { userModelResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { userModelResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { userModelResultObject.isError = n.getBooleanValue(); },
-        "records": n => { userModelResultObject.records = n.getCollectionOfObjectValues<UserModelActionResult>(createUserModelActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { userModelResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { userModelResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "messages": n => { partyModelResultObject.messages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "records": n => { partyModelResultObject.records = n.getCollectionOfObjectValues<PartyModel>(createPartyModelFromDiscriminatorValue); },
     }
 }
 /**
@@ -431,8 +203,7 @@ export function deserializeIntoUserModelResultObject(userModelResultObject: Part
 // @ts-ignore
 export function deserializeIntoValidationMessage(validationMessage: Partial<ValidationMessage> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "messageEnglish": n => { validationMessage.messageEnglish = n.getStringValue(); },
-        "messageJapanese": n => { validationMessage.messageJapanese = n.getStringValue(); },
+        "message": n => { validationMessage.message = n.getStringValue(); },
         "type": n => { validationMessage.type = n.getEnumValue<MessageType>(MessageTypeObject); },
     }
 }
@@ -441,10 +212,9 @@ export function deserializeIntoValidationMessage(validationMessage: Partial<Vali
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoValidationMessageActionResult(validationMessageActionResult: Partial<ValidationMessageActionResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoWaitingListMetaDataResponse(waitingListMetaDataResponse: Partial<WaitingListMetaDataResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "result": n => { validationMessageActionResult.result = n.getObjectValue<ActionResult>(createActionResultFromDiscriminatorValue); },
-        "value": n => { validationMessageActionResult.value = n.getObjectValue<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "result": n => { waitingListMetaDataResponse.result = n.getObjectValue<WaitingListModelResultObject>(createWaitingListModelResultObjectFromDiscriminatorValue); },
     }
 }
 /**
@@ -452,186 +222,86 @@ export function deserializeIntoValidationMessageActionResult(validationMessageAc
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoValidationMessageResultObject(validationMessageResultObject: Partial<ValidationMessageResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoWaitingListModel(waitingListModel: Partial<WaitingListModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "httpErrorCode": n => { validationMessageResultObject.httpErrorCode = n.getNumberValue(); },
-        "httpErrorMessage": n => { validationMessageResultObject.httpErrorMessage = n.getStringValue(); },
-        "isError": n => { validationMessageResultObject.isError = n.getBooleanValue(); },
-        "records": n => { validationMessageResultObject.records = n.getCollectionOfObjectValues<ValidationMessageActionResult>(createValidationMessageActionResultFromDiscriminatorValue); },
-        "systemMessages": n => { validationMessageResultObject.systemMessages = n.getCollectionOfPrimitiveValues<string>(); },
-        "userMessages": n => { validationMessageResultObject.userMessages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "id": n => { waitingListModel.id = n.getGuidValue(); },
+        "name": n => { waitingListModel.name = n.getStringValue(); },
+        "parties": n => { waitingListModel.parties = n.getCollectionOfObjectValues<PartyModel>(createPartyModelFromDiscriminatorValue); },
+        "timeForService": n => { waitingListModel.timeForService = n.getNumberValue(); },
+        "totalSeatsAvailable": n => { waitingListModel.totalSeatsAvailable = n.getNumberValue(); },
     }
 }
-export interface IActionResult extends Parsable {
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoWaitingListModelResultObject(waitingListModelResultObject: Partial<WaitingListModelResultObject> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "messages": n => { waitingListModelResultObject.messages = n.getCollectionOfObjectValues<ValidationMessage>(createValidationMessageFromDiscriminatorValue); },
+        "records": n => { waitingListModelResultObject.records = n.getCollectionOfObjectValues<WaitingListModel>(createWaitingListModelFromDiscriminatorValue); },
+    }
 }
-export interface IActionResultActionResult extends Parsable {
-    /**
-     * The result property
-     */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: IActionResult | null;
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoWaitingListRequest(waitingListRequest: Partial<WaitingListRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "name": n => { waitingListRequest.name = n.getStringValue(); },
+    }
 }
-export interface IActionResultResultObject extends Parsable {
-    /**
-     * The httpErrorCode property
-     */
-    httpErrorCode?: number | null;
-    /**
-     * The httpErrorMessage property
-     */
-    httpErrorMessage?: string | null;
-    /**
-     * The isError property
-     */
-    isError?: boolean | null;
-    /**
-     * The records property
-     */
-    records?: IActionResultActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
-}
-export interface IdentityUser extends Parsable {
-    /**
-     * The accessFailedCount property
-     */
-    accessFailedCount?: number | null;
-    /**
-     * The concurrencyStamp property
-     */
-    concurrencyStamp?: string | null;
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The emailConfirmed property
-     */
-    emailConfirmed?: boolean | null;
-    /**
-     * The id property
-     */
-    id?: string | null;
-    /**
-     * The lockoutEnabled property
-     */
-    lockoutEnabled?: boolean | null;
-    /**
-     * The lockoutEnd property
-     */
-    lockoutEnd?: Date | null;
-    /**
-     * The normalizedEmail property
-     */
-    normalizedEmail?: string | null;
-    /**
-     * The normalizedUserName property
-     */
-    normalizedUserName?: string | null;
-    /**
-     * The passwordHash property
-     */
-    passwordHash?: string | null;
-    /**
-     * The phoneNumber property
-     */
-    phoneNumber?: string | null;
-    /**
-     * The phoneNumberConfirmed property
-     */
-    phoneNumberConfirmed?: boolean | null;
-    /**
-     * The securityStamp property
-     */
-    securityStamp?: string | null;
-    /**
-     * The twoFactorEnabled property
-     */
-    twoFactorEnabled?: boolean | null;
-    /**
-     * The userName property
-     */
-    userName?: string | null;
-}
-export type JLPT = (typeof JLPTObject)[keyof typeof JLPTObject];
-export type Language = (typeof LanguageObject)[keyof typeof LanguageObject];
-export type LanguageLevel = (typeof LanguageLevelObject)[keyof typeof LanguageLevelObject];
-export interface LoginModel extends Parsable {
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The password property
-     */
-    password?: string | null;
-    /**
-     * The remember property
-     */
-    remember?: boolean | null;
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoWaitingListResponse(waitingListResponse: Partial<WaitingListResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "result": n => { waitingListResponse.result = n.getObjectValue<WaitingListModelResultObject>(createWaitingListModelResultObjectFromDiscriminatorValue); },
+    }
 }
 export type MessageType = (typeof MessageTypeObject)[keyof typeof MessageTypeObject];
-export interface RegistrationModel extends Parsable {
-    /**
-     * The confirmEmail property
-     */
-    confirmEmail?: string | null;
-    /**
-     * The confirmPassword property
-     */
-    confirmPassword?: string | null;
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The password property
-     */
-    password?: string | null;
-    /**
-     * The type property
-     */
-    type?: RegistrationType | null;
-}
-export type RegistrationType = (typeof RegistrationTypeObject)[keyof typeof RegistrationTypeObject];
-export interface ResumeModel extends Parsable {
-    /**
-     * The content property
-     */
-    content?: string | null;
+export interface PartyModel extends Parsable {
     /**
      * The id property
      */
     id?: Guid | null;
     /**
-     * The title property
+     * The isReady property
      */
-    title?: string | null;
+    isReady?: boolean | null;
     /**
-     * The user property
+     * The name property
      */
-    user?: UserModel | null;
+    name?: string | null;
     /**
-     * The userId property
+     * The size property
      */
-    userId?: Guid | null;
+    size?: number | null;
+    /**
+     * The waitingListModel property
+     */
+    waitingListModel?: WaitingListModel | null;
+}
+export interface PartyModelResultObject extends Parsable {
+    /**
+     * The messages property
+     */
+    messages?: ValidationMessage[] | null;
+    /**
+     * The records property
+     */
+    records?: PartyModel[] | null;
 }
 /**
  * Serializes information the current object
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeActionResult(writer: SerializationWriter, actionResult: Partial<ActionResult> | undefined | null = {}) : void {
-    if (actionResult) {
+export function serializeAddToQueueRequest(writer: SerializationWriter, addToQueueRequest: Partial<AddToQueueRequest> | undefined | null = {}) : void {
+    if (addToQueueRequest) {
     }
 }
 /**
@@ -639,14 +309,9 @@ export function serializeActionResult(writer: SerializationWriter, actionResult:
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeAddressModel(writer: SerializationWriter, addressModel: Partial<AddressModel> | undefined | null = {}) : void {
-    if (addressModel) {
-        writer.writeStringValue("city", addressModel.city);
-        writer.writeStringValue("country", addressModel.country);
-        writer.writeGuidValue("id", addressModel.id);
-        writer.writeStringValue("state", addressModel.state);
-        writer.writeStringValue("street", addressModel.street);
-        writer.writeStringValue("zipCode", addressModel.zipCode);
+export function serializeAddToQueueResponse(writer: SerializationWriter, addToQueueResponse: Partial<AddToQueueResponse> | undefined | null = {}) : void {
+    if (addToQueueResponse) {
+        writer.writeObjectValue<PartyModelResultObject>("result", addToQueueResponse.result, serializePartyModelResultObject);
     }
 }
 /**
@@ -654,10 +319,9 @@ export function serializeAddressModel(writer: SerializationWriter, addressModel:
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeBooleanActionResult(writer: SerializationWriter, booleanActionResult: Partial<BooleanActionResult> | undefined | null = {}) : void {
-    if (booleanActionResult) {
-        writer.writeObjectValue<ActionResult>("result", booleanActionResult.result, serializeActionResult);
-        writer.writeBooleanValue("value", booleanActionResult.value);
+export function serializeCheckInRequest(writer: SerializationWriter, checkInRequest: Partial<CheckInRequest> | undefined | null = {}) : void {
+    if (checkInRequest) {
+        writer.writeGuidValue("id", checkInRequest.id);
     }
 }
 /**
@@ -665,14 +329,9 @@ export function serializeBooleanActionResult(writer: SerializationWriter, boolea
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeBooleanResultObject(writer: SerializationWriter, booleanResultObject: Partial<BooleanResultObject> | undefined | null = {}) : void {
-    if (booleanResultObject) {
-        writer.writeNumberValue("httpErrorCode", booleanResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", booleanResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", booleanResultObject.isError);
-        writer.writeCollectionOfObjectValues<BooleanActionResult>("records", booleanResultObject.records, serializeBooleanActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", booleanResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", booleanResultObject.userMessages, serializeValidationMessage);
+export function serializeCheckInResponse(writer: SerializationWriter, checkInResponse: Partial<CheckInResponse> | undefined | null = {}) : void {
+    if (checkInResponse) {
+        writer.writeObjectValue<PartyModelResultObject>("result", checkInResponse.result, serializePartyModelResultObject);
     }
 }
 /**
@@ -680,8 +339,13 @@ export function serializeBooleanResultObject(writer: SerializationWriter, boolea
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIActionResult(writer: SerializationWriter, iActionResult: Partial<IActionResult> | undefined | null = {}) : void {
-    if (iActionResult) {
+export function serializePartyModel(writer: SerializationWriter, partyModel: Partial<PartyModel> | undefined | null = {}) : void {
+    if (partyModel) {
+        writer.writeGuidValue("id", partyModel.id);
+        writer.writeBooleanValue("isReady", partyModel.isReady);
+        writer.writeStringValue("name", partyModel.name);
+        writer.writeNumberValue("size", partyModel.size);
+        writer.writeObjectValue<WaitingListModel>("waitingListModel", partyModel.waitingListModel, serializeWaitingListModel);
     }
 }
 /**
@@ -689,143 +353,10 @@ export function serializeIActionResult(writer: SerializationWriter, iActionResul
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIActionResultActionResult(writer: SerializationWriter, iActionResultActionResult: Partial<IActionResultActionResult> | undefined | null = {}) : void {
-    if (iActionResultActionResult) {
-        writer.writeObjectValue<ActionResult>("result", iActionResultActionResult.result, serializeActionResult);
-        writer.writeObjectValue<IActionResult>("value", iActionResultActionResult.value, serializeIActionResult);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeIActionResultResultObject(writer: SerializationWriter, iActionResultResultObject: Partial<IActionResultResultObject> | undefined | null = {}) : void {
-    if (iActionResultResultObject) {
-        writer.writeNumberValue("httpErrorCode", iActionResultResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", iActionResultResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", iActionResultResultObject.isError);
-        writer.writeCollectionOfObjectValues<IActionResultActionResult>("records", iActionResultResultObject.records, serializeIActionResultActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", iActionResultResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", iActionResultResultObject.userMessages, serializeValidationMessage);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeIdentityUser(writer: SerializationWriter, identityUser: Partial<IdentityUser> | undefined | null = {}) : void {
-    if (identityUser) {
-        writer.writeNumberValue("accessFailedCount", identityUser.accessFailedCount);
-        writer.writeStringValue("concurrencyStamp", identityUser.concurrencyStamp);
-        writer.writeStringValue("email", identityUser.email);
-        writer.writeBooleanValue("emailConfirmed", identityUser.emailConfirmed);
-        writer.writeStringValue("id", identityUser.id);
-        writer.writeBooleanValue("lockoutEnabled", identityUser.lockoutEnabled);
-        writer.writeDateValue("lockoutEnd", identityUser.lockoutEnd);
-        writer.writeStringValue("normalizedEmail", identityUser.normalizedEmail);
-        writer.writeStringValue("normalizedUserName", identityUser.normalizedUserName);
-        writer.writeStringValue("passwordHash", identityUser.passwordHash);
-        writer.writeStringValue("phoneNumber", identityUser.phoneNumber);
-        writer.writeBooleanValue("phoneNumberConfirmed", identityUser.phoneNumberConfirmed);
-        writer.writeStringValue("securityStamp", identityUser.securityStamp);
-        writer.writeBooleanValue("twoFactorEnabled", identityUser.twoFactorEnabled);
-        writer.writeStringValue("userName", identityUser.userName);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeLoginModel(writer: SerializationWriter, loginModel: Partial<LoginModel> | undefined | null = {}) : void {
-    if (loginModel) {
-        writer.writeStringValue("email", loginModel.email);
-        writer.writeStringValue("password", loginModel.password);
-        writer.writeBooleanValue("remember", loginModel.remember);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeRegistrationModel(writer: SerializationWriter, registrationModel: Partial<RegistrationModel> | undefined | null = {}) : void {
-    if (registrationModel) {
-        writer.writeStringValue("confirmEmail", registrationModel.confirmEmail);
-        writer.writeStringValue("confirmPassword", registrationModel.confirmPassword);
-        writer.writeStringValue("email", registrationModel.email);
-        writer.writeStringValue("password", registrationModel.password);
-        writer.writeEnumValue<RegistrationType>("type", registrationModel.type);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeResumeModel(writer: SerializationWriter, resumeModel: Partial<ResumeModel> | undefined | null = {}) : void {
-    if (resumeModel) {
-        writer.writeStringValue("content", resumeModel.content);
-        writer.writeGuidValue("id", resumeModel.id);
-        writer.writeStringValue("title", resumeModel.title);
-        writer.writeObjectValue<UserModel>("user", resumeModel.user, serializeUserModel);
-        writer.writeGuidValue("userId", resumeModel.userId);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeUserModel(writer: SerializationWriter, userModel: Partial<UserModel> | undefined | null = {}) : void {
-    if (userModel) {
-        writer.writeObjectValue<AddressModel>("address", userModel.address, serializeAddressModel);
-        writer.writeDateValue("dateOfBirth", userModel.dateOfBirth);
-        writer.writeStringValue("email", userModel.email);
-        writer.writeEnumValue<LanguageLevel>("englishLevel", userModel.englishLevel);
-        writer.writeStringValue("firstName", userModel.firstName);
-        writer.writeGuidValue("id", userModel.id);
-        writer.writeObjectValue<IdentityUser>("identityUser", userModel.identityUser, serializeIdentityUser);
-        writer.writeStringValue("identityUserId", userModel.identityUserId);
-        writer.writeBooleanValue("isLoggedIn", userModel.isLoggedIn);
-        writer.writeEnumValue<LanguageLevel>("japaneseLevel", userModel.japaneseLevel);
-        writer.writeEnumValue<JLPT>("jlpt", userModel.jlpt);
-        writer.writeEnumValue<Language>("language", userModel.language);
-        writer.writeStringValue("lastName", userModel.lastName);
-        writer.writeStringValue("nationality", userModel.nationality);
-        writer.writeStringValue("phoneNumber", userModel.phoneNumber);
-        writer.writeStringValue("profilePicture", userModel.profilePicture);
-        writer.writeObjectValue<ResumeModel>("resume", userModel.resume, serializeResumeModel);
-        writer.writeStringValue("role", userModel.role);
-        writer.writeEnumValue<VisaStatus>("visaStatus", userModel.visaStatus);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeUserModelActionResult(writer: SerializationWriter, userModelActionResult: Partial<UserModelActionResult> | undefined | null = {}) : void {
-    if (userModelActionResult) {
-        writer.writeObjectValue<ActionResult>("result", userModelActionResult.result, serializeActionResult);
-        writer.writeObjectValue<UserModel>("value", userModelActionResult.value, serializeUserModel);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeUserModelResultObject(writer: SerializationWriter, userModelResultObject: Partial<UserModelResultObject> | undefined | null = {}) : void {
-    if (userModelResultObject) {
-        writer.writeNumberValue("httpErrorCode", userModelResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", userModelResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", userModelResultObject.isError);
-        writer.writeCollectionOfObjectValues<UserModelActionResult>("records", userModelResultObject.records, serializeUserModelActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", userModelResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", userModelResultObject.userMessages, serializeValidationMessage);
+export function serializePartyModelResultObject(writer: SerializationWriter, partyModelResultObject: Partial<PartyModelResultObject> | undefined | null = {}) : void {
+    if (partyModelResultObject) {
+        writer.writeCollectionOfObjectValues<ValidationMessage>("messages", partyModelResultObject.messages, serializeValidationMessage);
+        writer.writeCollectionOfObjectValues<PartyModel>("records", partyModelResultObject.records, serializePartyModel);
     }
 }
 /**
@@ -835,8 +366,7 @@ export function serializeUserModelResultObject(writer: SerializationWriter, user
 // @ts-ignore
 export function serializeValidationMessage(writer: SerializationWriter, validationMessage: Partial<ValidationMessage> | undefined | null = {}) : void {
     if (validationMessage) {
-        writer.writeStringValue("messageEnglish", validationMessage.messageEnglish);
-        writer.writeStringValue("messageJapanese", validationMessage.messageJapanese);
+        writer.writeStringValue("message", validationMessage.message);
         writer.writeEnumValue<MessageType>("type", validationMessage.type);
     }
 }
@@ -845,10 +375,9 @@ export function serializeValidationMessage(writer: SerializationWriter, validati
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeValidationMessageActionResult(writer: SerializationWriter, validationMessageActionResult: Partial<ValidationMessageActionResult> | undefined | null = {}) : void {
-    if (validationMessageActionResult) {
-        writer.writeObjectValue<ActionResult>("result", validationMessageActionResult.result, serializeActionResult);
-        writer.writeObjectValue<ValidationMessage>("value", validationMessageActionResult.value, serializeValidationMessage);
+export function serializeWaitingListMetaDataResponse(writer: SerializationWriter, waitingListMetaDataResponse: Partial<WaitingListMetaDataResponse> | undefined | null = {}) : void {
+    if (waitingListMetaDataResponse) {
+        writer.writeObjectValue<WaitingListModelResultObject>("result", waitingListMetaDataResponse.result, serializeWaitingListModelResultObject);
     }
 }
 /**
@@ -856,219 +385,111 @@ export function serializeValidationMessageActionResult(writer: SerializationWrit
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeValidationMessageResultObject(writer: SerializationWriter, validationMessageResultObject: Partial<ValidationMessageResultObject> | undefined | null = {}) : void {
-    if (validationMessageResultObject) {
-        writer.writeNumberValue("httpErrorCode", validationMessageResultObject.httpErrorCode);
-        writer.writeStringValue("httpErrorMessage", validationMessageResultObject.httpErrorMessage);
-        writer.writeBooleanValue("isError", validationMessageResultObject.isError);
-        writer.writeCollectionOfObjectValues<ValidationMessageActionResult>("records", validationMessageResultObject.records, serializeValidationMessageActionResult);
-        writer.writeCollectionOfPrimitiveValues<string>("systemMessages", validationMessageResultObject.systemMessages);
-        writer.writeCollectionOfObjectValues<ValidationMessage>("userMessages", validationMessageResultObject.userMessages, serializeValidationMessage);
+export function serializeWaitingListModel(writer: SerializationWriter, waitingListModel: Partial<WaitingListModel> | undefined | null = {}) : void {
+    if (waitingListModel) {
+        writer.writeGuidValue("id", waitingListModel.id);
+        writer.writeStringValue("name", waitingListModel.name);
+        writer.writeCollectionOfObjectValues<PartyModel>("parties", waitingListModel.parties, serializePartyModel);
+        writer.writeNumberValue("timeForService", waitingListModel.timeForService);
+        writer.writeNumberValue("totalSeatsAvailable", waitingListModel.totalSeatsAvailable);
     }
 }
-export interface UserModel extends Parsable {
-    /**
-     * The address property
-     */
-    address?: AddressModel | null;
-    /**
-     * The dateOfBirth property
-     */
-    dateOfBirth?: Date | null;
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The englishLevel property
-     */
-    englishLevel?: LanguageLevel | null;
-    /**
-     * The firstName property
-     */
-    firstName?: string | null;
-    /**
-     * The id property
-     */
-    id?: Guid | null;
-    /**
-     * The identityUser property
-     */
-    identityUser?: IdentityUser | null;
-    /**
-     * The identityUserId property
-     */
-    identityUserId?: string | null;
-    /**
-     * The isLoggedIn property
-     */
-    isLoggedIn?: boolean | null;
-    /**
-     * The japaneseLevel property
-     */
-    japaneseLevel?: LanguageLevel | null;
-    /**
-     * The jlpt property
-     */
-    jlpt?: JLPT | null;
-    /**
-     * The language property
-     */
-    language?: Language | null;
-    /**
-     * The lastName property
-     */
-    lastName?: string | null;
-    /**
-     * The nationality property
-     */
-    nationality?: string | null;
-    /**
-     * The phoneNumber property
-     */
-    phoneNumber?: string | null;
-    /**
-     * The profilePicture property
-     */
-    profilePicture?: string | null;
-    /**
-     * The resume property
-     */
-    resume?: ResumeModel | null;
-    /**
-     * The role property
-     */
-    role?: string | null;
-    /**
-     * The visaStatus property
-     */
-    visaStatus?: VisaStatus | null;
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeWaitingListModelResultObject(writer: SerializationWriter, waitingListModelResultObject: Partial<WaitingListModelResultObject> | undefined | null = {}) : void {
+    if (waitingListModelResultObject) {
+        writer.writeCollectionOfObjectValues<ValidationMessage>("messages", waitingListModelResultObject.messages, serializeValidationMessage);
+        writer.writeCollectionOfObjectValues<WaitingListModel>("records", waitingListModelResultObject.records, serializeWaitingListModel);
+    }
 }
-export interface UserModelActionResult extends Parsable {
-    /**
-     * The result property
-     */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: UserModel | null;
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeWaitingListRequest(writer: SerializationWriter, waitingListRequest: Partial<WaitingListRequest> | undefined | null = {}) : void {
+    if (waitingListRequest) {
+        writer.writeStringValue("name", waitingListRequest.name);
+    }
 }
-export interface UserModelResultObject extends Parsable {
-    /**
-     * The httpErrorCode property
-     */
-    httpErrorCode?: number | null;
-    /**
-     * The httpErrorMessage property
-     */
-    httpErrorMessage?: string | null;
-    /**
-     * The isError property
-     */
-    isError?: boolean | null;
-    /**
-     * The records property
-     */
-    records?: UserModelActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeWaitingListResponse(writer: SerializationWriter, waitingListResponse: Partial<WaitingListResponse> | undefined | null = {}) : void {
+    if (waitingListResponse) {
+        writer.writeObjectValue<WaitingListModelResultObject>("result", waitingListResponse.result, serializeWaitingListModelResultObject);
+    }
 }
 export interface ValidationMessage extends Parsable {
     /**
-     * The messageEnglish property
+     * The message property
      */
-    messageEnglish?: string | null;
-    /**
-     * The messageJapanese property
-     */
-    messageJapanese?: string | null;
+    message?: string | null;
     /**
      * The type property
      */
     type?: MessageType | null;
 }
-export interface ValidationMessageActionResult extends Parsable {
+export interface WaitingListMetaDataResponse extends Parsable {
     /**
      * The result property
      */
-    result?: ActionResult | null;
-    /**
-     * The value property
-     */
-    value?: ValidationMessage | null;
+    result?: WaitingListModelResultObject | null;
 }
-export interface ValidationMessageResultObject extends Parsable {
+export interface WaitingListModel extends Parsable {
     /**
-     * The httpErrorCode property
+     * The id property
      */
-    httpErrorCode?: number | null;
+    id?: Guid | null;
     /**
-     * The httpErrorMessage property
+     * The name property
      */
-    httpErrorMessage?: string | null;
+    name?: string | null;
     /**
-     * The isError property
+     * The parties property
      */
-    isError?: boolean | null;
+    parties?: PartyModel[] | null;
+    /**
+     * The timeForService property
+     */
+    timeForService?: number | null;
+    /**
+     * The totalSeatsAvailable property
+     */
+    totalSeatsAvailable?: number | null;
+}
+export interface WaitingListModelResultObject extends Parsable {
+    /**
+     * The messages property
+     */
+    messages?: ValidationMessage[] | null;
     /**
      * The records property
      */
-    records?: ValidationMessageActionResult[] | null;
-    /**
-     * The systemMessages property
-     */
-    systemMessages?: string[] | null;
-    /**
-     * The userMessages property
-     */
-    userMessages?: ValidationMessage[] | null;
+    records?: WaitingListModel[] | null;
 }
-export type VisaStatus = (typeof VisaStatusObject)[keyof typeof VisaStatusObject];
-export const JLPTObject = {
-    N5: "N5",
-    N4: "N4",
-    N3: "N3",
-    N2: "N2",
-    N1: "N1",
-    None: "None",
-} as const;
-export const LanguageLevelObject = {
-    None: "None",
-    Some: "Some",
-    Conversational: "Conversational",
-    Business: "Business",
-    Fluent: "Fluent",
-    Native: "Native",
-} as const;
-export const LanguageObject = {
-    Japanese: "Japanese",
-    English: "English",
-} as const;
+export interface WaitingListRequest extends Parsable {
+    /**
+     * The name property
+     */
+    name?: string | null;
+}
+export interface WaitingListResponse extends Parsable {
+    /**
+     * The result property
+     */
+    result?: WaitingListModelResultObject | null;
+}
 export const MessageTypeObject = {
     Success: "success",
     Info: "info",
     Warning: "warning",
     ErrorEscaped: "error",
-} as const;
-export const RegistrationTypeObject = {
-    User: "User",
-    Company: "Company",
-} as const;
-export const VisaStatusObject = {
-    Working: "Working",
-    HighlySkilled: "HighlySkilled",
-    IntraCompanyTransfee: "IntraCompanyTransfee",
-    Student: "Student",
-    WorkingHoliday: "WorkingHoliday",
-    Spouse: "Spouse",
-    NoVisa: "NoVisa",
 } as const;
 /* tslint:enable */
 /* eslint-enable */

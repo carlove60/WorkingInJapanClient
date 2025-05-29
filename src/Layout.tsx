@@ -1,9 +1,9 @@
-import PrimarySearchAppBar from "./Components/AppBar/AppBar.tsx";
+import NavBar from "./Components/AppBar/AppBar.tsx";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
     return <div>
-        <PrimarySearchAppBar></PrimarySearchAppBar>
+        <NavBar></NavBar>
         <main>
             <Outlet /> {/* This renders the child components */}
         </main>

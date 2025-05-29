@@ -3,7 +3,7 @@ import {isNotNullOrEmpty} from "../Helpers/StringHelper.ts";
 import {Validator} from "../Interfaces/Validator.ts";
 import {ValidationMessage} from "../../generated-api/models";
 
-function useUpdateModel<T>(initialValue: T, validator: Validator<T>) {
+function useUpdateModel<T>(initialValue: T, validator?: Validator<T>) {
     const [model, setModel] = React.useState<T>(initialValue);
     const [validationMessages, setValidationMessages] = React.useState<ValidationMessage[]>();
 
@@ -13,12 +13,12 @@ function useUpdateModel<T>(initialValue: T, validator: Validator<T>) {
                 ...prevState,
                 [key]: value
             }));
-            validator.validate(model);
+            validator?.validate(model);
         }
     };
 
     React.useEffect(() => {
-        const newValidationMessages = validator.validate(model);
+        const newValidationMessages = validator?.validate(model);
         setValidationMessages(newValidationMessages);
     }, [model, validator]);
 

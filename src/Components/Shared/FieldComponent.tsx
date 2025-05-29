@@ -1,42 +1,30 @@
 import * as React from "react";
 import {FieldType} from "../../Interfaces/FieldType.ts";
-import * as Guard from "../../Helpers/Guard.ts";
-import DraftEditor from "./DraftJs.tsx";
-import {EnumText} from "../../Enums/EnumTextName.ts";
-import {getTranslatedText} from "../../Helpers/TextHelper.ts";
-import {LanguageEnum} from "../../Interfaces/ITranslatedText.ts";
 import {TextField} from "@mui/material";
+import {MessageTypeObject} from "../../../generated-api/models";
+import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
+import {ValidationMessage} from "../../GeneratedClient";
 
 interface Props {
     type: FieldType;
-    label: EnumText;
-    value: string | null | undefined;
+    label: string;
+    value: string | number | null | undefined;
     onChange?: (value: string) => void | undefined;
     readOnly?: boolean;
     autoComplete?: string;
+    validationMessage?: ValidationMessage;
 }
 
-const FieldComponent = ({type, label, value, onChange, readOnly, autoComplete} : Props) => {
+const FieldComponent = ({type, label, value, onChange, readOnly, autoComplete, validationMessage} : Props) => {
     const onContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        if (Guard.isNotNullOrUndefined(onChange) && !readOnly) {
+        if (isNotNullOrUndefined(onChange) && !readOnly) {
             onChange(e.currentTarget.value);
         }
     }
 
-    const labelText = (): string => {
-        if (Guard.isNotNullOrUndefined(label)) {
-            return getTranslatedText(label, LanguageEnum.English) ?? "";
-        }
 
-        return "Label";
-    };
-
-    if (type === FieldType.Html) {
-        return <DraftEditor content={value as string} onChange={onChange} />
-    }
-
-    return <TextField autoComplete={autoComplete} variant={"standard"} type={FieldType[type]} style={{display: "flex"}} id="outlined-basic" label={labelText()} onChange={onContentChange} value={value} />;
+    return <TextField error={validationMessage?.type === MessageTypeObject.ErrorEscaped} aria-errormessage={validationMessage?.message as string} autoComplete={autoComplete} variant={"standard"} type={FieldType[type]} style={{display: "flex"}} id="outlined-basic" label={label} onChange={onContentChange} value={value} />;
 };
 
 export default FieldComponent;

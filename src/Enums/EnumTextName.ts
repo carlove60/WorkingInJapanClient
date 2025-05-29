@@ -3,7 +3,7 @@
 export enum EnumText {
     Ok,
     Cancel,
-    Continue,
+    Submit,
     Login,
     Register,
     EmptyRegisterModel,
