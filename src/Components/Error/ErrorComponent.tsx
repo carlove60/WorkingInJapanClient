@@ -4,8 +4,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import Collapse from "@mui/material/Collapse";
 import * as React from "react";
 import { isNullOrUndefined } from "../../Helpers/Guard.ts";
+import { ExtendedValidationMessage } from "../../Validators/PartyModelValidator.ts";
 
-const ErrorComponent = ({ value, onClose }: { value: string[] | undefined; onClose: () => void }) => {
+const ErrorComponent = ({
+  value,
+  onClose,
+}: {
+  value: ExtendedValidationMessage[] | undefined;
+  onClose: () => void;
+}) => {
   const [open, setOpen] = React.useState(true);
 
   if (isNullOrUndefined(value)) {
@@ -33,8 +40,8 @@ const ErrorComponent = ({ value, onClose }: { value: string[] | undefined; onClo
         sx={{ mb: 2, whiteSpace: "pre-line" }}
       >
         {value.map((message) => (
-          <span key={message}>
-            {message}
+          <span key={message.validationMessage?.message}>
+            {message.validationMessage?.message}
             <br />
           </span>
         ))}

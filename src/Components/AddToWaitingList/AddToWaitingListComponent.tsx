@@ -1,8 +1,7 @@
 import * as React from "react";
 import ButtonComponent from "../Shared/ButtonComponent.tsx";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
-import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
-import { validatePartyDto } from "../../Validators/PartyModelValidator.ts";
+import { ExtendedValidationMessage, validatePartyDto } from "../../Validators/PartyModelValidator.ts";
 import useValidatedModel from "../../Hooks/useValidatedModel.ts";
 import ErrorComponent from "../Error/ErrorComponent.tsx";
 import TextFieldComponent from "../Shared/TextFieldComponent.tsx";
@@ -14,7 +13,7 @@ import { GetDefaultWaitingList } from "../../ClientApi/ClientApi.ts";
 
 const AddToWaitingListComponent: React.FunctionComponent = () => {
   const [waitingListMetaDataModel, setWaitingListMetaDataModel] = React.useState<WaitingListDto>();
-  const [errorMessages, setErrorMessages] = React.useState<string[]>();
+  const [errorMessages, setErrorMessages] = React.useState<ExtendedValidationMessage[]>();
   const { model: partyModel, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
     size: 0,
     name: "",
