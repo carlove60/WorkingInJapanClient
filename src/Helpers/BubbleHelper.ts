@@ -1,21 +1,20 @@
-import {ValidationMessage} from "../GeneratedClient";
+import { ValidationMessage } from "../ClientApi";
 
+export const groupMessages = (messages: ValidationMessage[]) => {
+  if (!messages || !messages.length) {
+    return null;
+  }
+  return messages.reduce<Record<string, ValidationMessage[]>>((groupedMessages, message) => {
+    const { type } = message;
 
-export const groupMessages = (messages: ValidationMessage[])=> {
-    if (!messages || !messages.length) {
-        return null;
+    if (type && !groupedMessages[type]) {
+      groupedMessages[type] = [];
     }
-    return messages.reduce<Record<string, ValidationMessage[]>>((groupedMessages, message) => {
-        const {type} = message;
 
-        if (type && !groupedMessages[type]) {
-            groupedMessages[type] = [];
-        }
+    if (type) {
+      groupedMessages[type].push(message);
+    }
 
-        if (type) {
-            groupedMessages[type].push(message);
-        }
-
-        return groupedMessages;
-    }, {});
-}
+    return groupedMessages;
+  }, {});
+};

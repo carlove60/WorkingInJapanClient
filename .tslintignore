@@ -1,0 +1,2 @@
+# .tslintignore
+src/GeneratedClient/*

@@ -1,30 +1,43 @@
 import * as React from "react";
-import {FieldType} from "../../Interfaces/FieldType.ts";
-import {TextField} from "@mui/material";
-import {MessageTypeObject} from "../../../generated-api/models";
-import {isNotNullOrUndefined} from "../../Helpers/Guard.ts";
-import {ValidationMessage} from "../../GeneratedClient";
+import { TextField } from "@mui/material";
+import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
 
-interface Props {
-    type: FieldType;
-    label: string;
-    value: string | number | null | undefined;
-    onChange?: (value: string) => void | undefined;
-    readOnly?: boolean;
-    autoComplete?: string;
-    validationMessage?: ValidationMessage;
+export interface FieldComponentProps extends SharedFieldComponentProps {
+  value: string | number | null | undefined;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void | undefined;
 }
 
-const FieldComponent = ({type, label, value, onChange, readOnly, autoComplete, validationMessage} : Props) => {
-    const onContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        if (isNotNullOrUndefined(onChange) && !readOnly) {
-            onChange(e.currentTarget.value);
-        }
+export interface SharedFieldComponentProps {
+  type: React.HTMLInputTypeAttribute;
+  label: string;
+  placeHolder: string;
+  errorMessage: string;
+}
+
+const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolder }: FieldComponentProps) => {
+  const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    if (isNotNullOrUndefined(onChange)) {
+      onChange(event);
     }
+  };
 
-
-    return <TextField error={validationMessage?.type === MessageTypeObject.ErrorEscaped} aria-errormessage={validationMessage?.message as string} autoComplete={autoComplete} variant={"standard"} type={FieldType[type]} style={{display: "flex"}} id="outlined-basic" label={label} onChange={onContentChange} value={value} />;
+  return (
+    <TextField
+      error={errorMessage !== undefined}
+      placeholder={placeHolder}
+      aria-label={label}
+      helperText={errorMessage}
+      required={true}
+      variant={"outlined"}
+      type={type}
+      id={`Field-${label}`}
+      label={label}
+      style={{ margin: "10px" }}
+      onChange={onContentChange}
+      value={value}
+    />
+  );
 };
 
 export default FieldComponent;

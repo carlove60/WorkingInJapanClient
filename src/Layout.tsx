@@ -1,13 +1,18 @@
-import NavBar from "./Components/AppBar/AppBar.tsx";
 import { Outlet } from "react-router-dom";
+import BubbleComponent from "./Components/Bubble/BubbleComponent.tsx";
+import Box from "@mui/material/Box";
 
 const Layout = () => {
-    return <div>
-        <NavBar></NavBar>
-        <main>
-            <Outlet /> {/* This renders the child components */}
-        </main>
-    </div>
-}
+  return (
+    <>
+      <BubbleComponent />
+      <main style={{ paddingTop: "50px" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Outlet /> {/* This renders the child components */}
+        </Box>
+      </main>
+    </>
+  );
+};
 
 export default Layout;

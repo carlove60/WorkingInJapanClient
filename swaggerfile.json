@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "WaitingList",
+    "title": "WaitingList.Api",
     "version": "1.0"
   },
   "servers": [
@@ -10,47 +10,28 @@
     }
   ],
   "paths": {
-    "/api/party/check-in": {
-      "post": {
+    "/get-party": {
+      "get": {
         "tags": [
           "Party"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PartyModelResultObject"
+                  "$ref": "#/components/schemas/GetPartyResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PartyModelResultObject"
+                  "$ref": "#/components/schemas/GetPartyResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PartyModelResultObject"
+                  "$ref": "#/components/schemas/GetPartyResponse"
                 }
               }
             }
@@ -58,37 +39,28 @@
         }
       }
     },
-    "/api/waitinglist/waiting-list": {
+    "/waiting-list": {
       "get": {
         "tags": [
           "WaitingList"
         ],
-        "parameters": [
-          {
-            "name": "waitingListName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListResponse"
+                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListResponse"
+                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListResponse"
+                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
                 }
               }
             }
@@ -96,7 +68,7 @@
         }
       }
     },
-    "/api/waitinglist/waitinglist-meta-data": {
+    "/api/waitinglist/default-waiting-list": {
       "get": {
         "tags": [
           "WaitingList"
@@ -182,17 +154,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddToQueueRequest"
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddToQueueRequest"
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AddToQueueRequest"
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
               }
             }
           }
@@ -203,17 +175,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddToQueueResponse"
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddToQueueResponse"
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddToQueueResponse"
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
                 }
               }
             }
@@ -224,15 +196,35 @@
   },
   "components": {
     "schemas": {
-      "AddToQueueRequest": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "AddToQueueResponse": {
+      "AddToWaitingListRequest": {
         "type": "object",
         "properties": {
-          "result": {
-            "$ref": "#/components/schemas/PartyModelResultObject"
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddToWaitingListResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "partyName": {
+            "type": "string"
+          },
+          "parties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartyDto"
+            }
           }
         },
         "additionalProperties": false
@@ -240,18 +232,47 @@
       "CheckInRequest": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
           }
         },
         "additionalProperties": false
       },
       "CheckInResponse": {
+        "required": [
+          "messages"
+        ],
         "type": "object",
         "properties": {
-          "result": {
-            "$ref": "#/components/schemas/PartyModelResultObject"
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPartyResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
           }
         },
         "additionalProperties": false
@@ -265,10 +286,13 @@
         ],
         "type": "String"
       },
-      "PartyModel": {
+      "PartyDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "waitingListName": {
+            "type": "string"
+          },
+          "sessionId": {
             "type": "string",
             "format": "uuid"
           },
@@ -276,41 +300,8 @@
             "type": "string"
           },
           "size": {
-            "maximum": 10,
-            "minimum": 1,
             "type": "integer",
             "format": "int32"
-          },
-          "isReady": {
-            "type": "boolean"
-          },
-          "isServiceEnded": {
-            "type": "boolean"
-          },
-          "waitingListModel": {
-            "$ref": "#/components/schemas/WaitingListModel"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PartyModelResultObject": {
-        "required": [
-          "messages",
-          "records"
-        ],
-        "type": "object",
-        "properties": {
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PartyModel"
-            }
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationMessage"
-            }
           }
         },
         "additionalProperties": false
@@ -331,69 +322,47 @@
         },
         "additionalProperties": false
       },
-      "WaitingListMetaDataResponse": {
+      "WaitingListDto": {
         "type": "object",
         "properties": {
-          "result": {
-            "$ref": "#/components/schemas/WaitingListModelResultObject"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WaitingListModel": {
-        "type": "object",
-        "properties": {
-          "parties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PartyModel"
-            }
-          },
           "name": {
             "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalSeats": {
+            "type": "integer",
+            "format": "int32"
           },
           "totalSeatsAvailable": {
             "type": "integer",
             "format": "int32"
           },
-          "timeForService": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "parties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartyDto"
+            }
           }
         },
         "additionalProperties": false
       },
-      "WaitingListModelResultObject": {
+      "WaitingListMetaDataResponse": {
         "required": [
-          "messages",
-          "records"
+          "messages"
         ],
         "type": "object",
         "properties": {
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WaitingListModel"
-            }
-          },
           "messages": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ValidationMessage"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "WaitingListResponse": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "$ref": "#/components/schemas/WaitingListModelResultObject"
+          },
+          "waitingList": {
+            "$ref": "#/components/schemas/WaitingListDto"
           }
         },
         "additionalProperties": false

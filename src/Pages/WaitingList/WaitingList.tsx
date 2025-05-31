@@ -1,8 +1,8 @@
 import "react";
-import WaitingList from "../../Components/WaitingList/WaitingList.tsx";
+import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWaitingListComponent.tsx";
 
 const WaitingListPage = () => {
-    return <WaitingList />;
-}
+  return <AddToWaitingListComponent />;
+};
 
 export default WaitingListPage;

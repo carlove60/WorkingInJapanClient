@@ -1,53 +1,46 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {clearBubble} from "./BubbleSlice.ts";
-import {RootState} from "../../store.ts";
-import {Alert} from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
-import InfoIcon from '@mui/icons-material/Info';
-import ErrorIcon from '@mui/icons-material/Error';
-import WarningIcon from '@mui/icons-material/Warning';
-import {MessageType, MessageTypeObject} from "../../../generated-api/models";
-import {isNullOrUndefined} from "../../Helpers/Guard.ts";
+import { Alert } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Collapse from "@mui/material/Collapse";
+import * as React from "react";
+import { isNullOrUndefined } from "../../Helpers/Guard.ts";
 
-const ErrorComponent = () => {
-    const dispatch = useDispatch();
-    const errorState = useSelector((state: RootState) => state.error);
-    const messages = errorState?.messages;
+const ErrorComponent = ({ value, onClose }: { value: string[] | undefined; onClose: () => void }) => {
+  const [open, setOpen] = React.useState(true);
 
-    if (isNullOrUndefined(messages)) {
-        return null;
-    }
+  if (isNullOrUndefined(value)) {
+    return null;
+  }
 
-    const messageSx: React.CSSProperties = { whiteSpace: 'pre-line', alignSelf: "right", alignContent: 'left', position: 'absolute' };
-
-    const getIcon = (messageType: MessageType): React.ReactNode | null => {
-        switch(messageType) {
-            case MessageTypeObject.ErrorEscaped:
-                return <ErrorIcon fontSize="inherit" />;
-            case MessageTypeObject.Warning:
-                return <WarningIcon fontSize="inherit" />;
-            case MessageTypeObject.Info:
-                return <InfoIcon fontSize="inherit" />;
-            case MessageTypeObject.Success:
-                return <CheckIcon fontSize="inherit" />;
-            default:
-                return null;
+  return (
+    // Instead of using an effect this saves a re-render
+    <Collapse style={{ position: "absolute" }} in={open || !isNullOrUndefined(value)}>
+      <Alert
+        severity="error"
+        action={
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            size="small"
+            onClick={() => {
+              setOpen(false);
+              onClose();
+            }}
+          >
+            <CloseIcon fontSize="inherit" />
+          </IconButton>
         }
-    }
-
-    const bubbles =  messages.map((message) : React.ReactNode => {
-        const messageType = message.type as MessageType;
-        return <Alert
-            sx={messageSx}
-            icon={getIcon(messageType)}
-            severity={messageType}
-            onClose={() => dispatch(clearBubble(messageType))}>
-            {messages.map((infoObject) => infoObject.message + "\r\n")}
-        </Alert>;
-    });
-
-    return  <div>{...bubbles}</div>;
-}
+        sx={{ mb: 2, whiteSpace: "pre-line" }}
+      >
+        {value.map((message) => (
+          <span key={message}>
+            {message}
+            <br />
+          </span>
+        ))}
+      </Alert>
+    </Collapse>
+  );
+};
 
 export default ErrorComponent;

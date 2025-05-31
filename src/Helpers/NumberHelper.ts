@@ -1,8 +1,15 @@
+/**
+ * NaN is a number. Ensuring we don't get false positives
+ * @param value
+ */
 export const isNumeric = (value: unknown): value is number => {
-    if (typeof value !== "string") {
-        return false;
-    }
+  if (typeof value === "number" && !isNaN(value)) {
+    return true;
+  }
 
-    return !isNaN(Number(value.trim())) &&
-        !isNaN(parseFloat(value.trim()));
-}
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  return !isNaN(Number(value)) && !isNaN(parseFloat(value));
+};

@@ -1,29 +1,21 @@
 import * as React from "react";
-import {isNotNullOrEmpty} from "../Helpers/StringHelper.ts";
-import {Validator} from "../Interfaces/Validator.ts";
-import {ValidationMessage} from "../../generated-api/models";
+import { isNotNullOrEmpty } from "../Helpers/StringHelper.ts";
 
-function useUpdateModel<T>(initialValue: T, validator?: Validator<T>) {
-    const [model, setModel] = React.useState<T>(initialValue);
-    const [validationMessages, setValidationMessages] = React.useState<ValidationMessage[]>();
+function useUpdateModel<T>(initialValue: T) {
+  const [model, setModel] = React.useState<T>(initialValue);
 
-    const updateModel = (key: keyof T, value: T[keyof T]) => {
-        if (isNotNullOrEmpty(key as string)) {
-            setModel(prevState => ({
-                ...prevState,
-                [key]: value
-            }));
-            validator?.validate(model);
-        }
-    };
+  const updateModel = (key: keyof T, value: T[keyof T]) => {
+    if (isNotNullOrEmpty(key as string)) {
+      const newModel = {
+        ...model,
+        [key]: value,
+      };
 
-    React.useEffect(() => {
-        const newValidationMessages = validator?.validate(model);
-        setValidationMessages(newValidationMessages);
-    }, [model, validator]);
+      setModel(newModel);
+    }
+  };
 
-    return {model, updateModel, validationMessages};
+  return { model, updateModel };
 }
-
 
 export default useUpdateModel;
