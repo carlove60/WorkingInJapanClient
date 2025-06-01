@@ -6,7 +6,15 @@ interface TextFieldComponentProps extends SharedFieldComponentProps {
   value: string | undefined;
 }
 
-const TextFieldComponent = ({ onChange, value, label, errorMessage, type, placeHolder }: TextFieldComponentProps) => {
+const TextFieldComponent = ({
+  onChange,
+  value,
+  label,
+  errorMessage,
+  type,
+  placeHolder,
+  disabled,
+}: TextFieldComponentProps) => {
   const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.currentTarget.value);
   };
@@ -19,6 +27,7 @@ const TextFieldComponent = ({ onChange, value, label, errorMessage, type, placeH
       label={label}
       errorMessage={errorMessage}
       type={type}
+      disabled={disabled}
     />
   );
 };

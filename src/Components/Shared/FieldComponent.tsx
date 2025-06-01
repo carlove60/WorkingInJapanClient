@@ -12,9 +12,10 @@ export interface SharedFieldComponentProps {
   label: string;
   placeHolder: string;
   errorMessage: string;
+  disabled: boolean;
 }
 
-const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolder }: FieldComponentProps) => {
+const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolder, disabled }: FieldComponentProps) => {
   const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (isNotNullOrUndefined(onChange)) {
@@ -36,6 +37,7 @@ const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolde
       style={{ margin: "10px" }}
       onChange={onContentChange}
       value={value}
+      disabled={disabled}
     />
   );
 };

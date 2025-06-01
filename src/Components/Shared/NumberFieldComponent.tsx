@@ -13,6 +13,7 @@ const NumberFieldComponent = ({
   errorMessage,
   type,
   placeHolder,
+  disabled,
 }: NumberFieldComponentProps) => {
   const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.currentTarget.valueAsNumber);
@@ -26,6 +27,7 @@ const NumberFieldComponent = ({
       label={label}
       errorMessage={errorMessage}
       type={type}
+      disabled={disabled}
     />
   );
 };

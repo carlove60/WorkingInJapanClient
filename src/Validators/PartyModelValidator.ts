@@ -5,7 +5,7 @@ import { isNullOrUndefined } from "../Helpers/Guard.ts";
 
 export interface ExtendedValidationMessage {
   validationMessage: ValidationMessage;
-  field: keyof PartyDto;
+  field: keyof PartyDto | undefined;
 }
 
 export const validatePartyDto = (model: PartyDto | undefined): ExtendedValidationMessage[] => {

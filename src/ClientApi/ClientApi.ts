@@ -1,50 +1,65 @@
-import { store } from "../store.ts";
-import { add } from "../Components/Bubble/BubbleSlice.ts";
-import { ValidationMessage, WaitingListMetaDataResponse, AddToWaitingListResponse } from "./models";
-import { WaitingListClient } from "./ApiControllers.ts";
+import { AddToWaitingListResponse, AddToWaitingListRequest, GetPartyResponse, CheckInResponse } from "./models";
+import { PartyClient, WaitingListClient } from "./ApiControllers.ts";
 import { isNotNullOrUndefined } from "../Helpers/Guard.ts";
+import { WaitingListResponse } from "./models";
+import { handleMessages, transformException } from "../Helpers/ApiClientHelper.ts";
 
-export const AddToWaitingList = async (): Promise<AddToWaitingListResponse> => {
+export const AddToWaitingList = async (request: AddToWaitingListRequest): Promise<AddToWaitingListResponse> => {
   const resultValue: AddToWaitingListResponse = { messages: [], partyName: "" };
   try {
-    const response = await WaitingListClient.addPartyToWaitinglist();
+    const response = await WaitingListClient.addPartyToWaitinglist(request);
     if (isNotNullOrUndefined(response.messages) && response.messages.length > 0) {
       resultValue.messages.push(...response.messages);
     }
   } catch (exception) {
-    const responseMessage = transformException(exception);
+    const responseMessage = await transformException(exception);
     handleMessages([responseMessage]);
   }
 
   return resultValue;
 };
 
-export const GetDefaultWaitingList = async (): Promise<WaitingListMetaDataResponse> => {
-  let resultValue: WaitingListMetaDataResponse = { waitingList: {}, messages: [] };
+export const GetWaitingList = async (): Promise<WaitingListResponse> => {
+  let resultValue: WaitingListResponse = {
+    waitingList: { seatsAvailable: 0, name: "" },
+    messages: [],
+  };
   try {
-    resultValue = await WaitingListClient.getDefaultWaitingList();
+    resultValue = await WaitingListClient.getWaitingList();
   } catch (exception) {
-    const responseMessage = transformException(exception);
+    const responseMessage = await transformException(exception);
     handleMessages([responseMessage]);
   }
 
   return resultValue;
 };
 
-const transformException = (exception: unknown): ValidationMessage => {
-  let errorMessage = "An unknown error occurred, please contact support";
-  if (exception instanceof Error) {
-    errorMessage = exception.message;
-  } else if (typeof exception === "string") {
-    errorMessage = exception;
-  } else if (typeof exception === "object" && exception !== null && "message" in exception) {
-    errorMessage = (exception as ValidationMessage).message;
+export const GetParty = async (): Promise<GetPartyResponse> => {
+  let resultValue: GetPartyResponse = {
+    messages: [],
+    party: {},
+  };
+  try {
+    resultValue = await PartyClient.getParty();
+  } catch (exception) {
+    const responseMessage = await transformException(exception);
+    handleMessages([responseMessage]);
   }
-  return { message: errorMessage, type: "error" };
+
+  return resultValue;
 };
 
-const handleMessages = (messages: ValidationMessage[]): void => {
-  messages?.forEach((message) => {
-    store.dispatch(add(message));
-  });
+export const CheckIn = async (): Promise<CheckInResponse> => {
+  let resultValue: CheckInResponse = {
+    messages: [],
+    success: false,
+  };
+  try {
+    resultValue = await PartyClient.checkIn();
+  } catch (exception) {
+    const responseMessage = await transformException(exception);
+    handleMessages([responseMessage]);
+  }
+
+  return resultValue;
 };

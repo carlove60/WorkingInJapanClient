@@ -10,6 +10,35 @@
     }
   ],
   "paths": {
+    "/api/party/check-in": {
+      "post": {
+        "tags": [
+          "Party"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/get-party": {
       "get": {
         "tags": [
@@ -39,7 +68,7 @@
         }
       }
     },
-    "/waiting-list": {
+    "/api/waiting-list/waiting-list": {
       "get": {
         "tags": [
           "WaitingList"
@@ -50,17 +79,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
+                  "$ref": "#/components/schemas/WaitingListResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
+                  "$ref": "#/components/schemas/WaitingListResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
+                  "$ref": "#/components/schemas/WaitingListResponse"
                 }
               }
             }
@@ -68,84 +97,7 @@
         }
       }
     },
-    "/api/waitinglist/default-waiting-list": {
-      "get": {
-        "tags": [
-          "WaitingList"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WaitingListMetaDataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/waitinglist/check-in": {
-      "post": {
-        "tags": [
-          "WaitingList"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckInRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckInResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckInResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckInResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/waitinglist/add-party-to-waitinglist": {
+    "/api/waiting-list/add-party-to-waitinglist": {
       "post": {
         "tags": [
           "WaitingList"
@@ -229,15 +181,6 @@
         },
         "additionalProperties": false
       },
-      "CheckInRequest": {
-        "type": "object",
-        "properties": {
-          "party": {
-            "$ref": "#/components/schemas/PartyDto"
-          }
-        },
-        "additionalProperties": false
-      },
       "CheckInResponse": {
         "required": [
           "messages"
@@ -294,7 +237,7 @@
           },
           "sessionId": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
           "name": {
             "type": "string"
@@ -302,6 +245,9 @@
           "size": {
             "type": "integer",
             "format": "int32"
+          },
+          "canCheckIn": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -323,9 +269,14 @@
         "additionalProperties": false
       },
       "WaitingListDto": {
+        "required": [
+          "name",
+          "seatsAvailable"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "id": {
@@ -336,7 +287,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "totalSeatsAvailable": {
+          "seatsAvailable": {
             "type": "integer",
             "format": "int32"
           },
@@ -349,7 +300,7 @@
         },
         "additionalProperties": false
       },
-      "WaitingListMetaDataResponse": {
+      "WaitingListResponse": {
         "required": [
           "messages"
         ],

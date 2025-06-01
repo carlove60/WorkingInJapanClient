@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 interface buttonProps {
   text: string;
   onPress: () => void;
-  disabled: boolean;
+  disabled: boolean | undefined;
 }
 const buttonComponent: React.FunctionComponent<buttonProps> = ({ onPress, text, disabled }: buttonProps) => {
   const onClick = (): void => {

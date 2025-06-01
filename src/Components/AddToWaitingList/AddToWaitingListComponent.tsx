@@ -1,44 +1,48 @@
 import * as React from "react";
 import ButtonComponent from "../Shared/ButtonComponent.tsx";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
-import { ExtendedValidationMessage, validatePartyDto } from "../../Validators/PartyModelValidator.ts";
+import { validatePartyDto } from "../../Validators/PartyModelValidator.ts";
 import useValidatedModel from "../../Hooks/useValidatedModel.ts";
 import ErrorComponent from "../Error/ErrorComponent.tsx";
 import TextFieldComponent from "../Shared/TextFieldComponent.tsx";
 import NumberFieldComponent from "../Shared/NumberFieldComponent.tsx";
 import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper.ts";
 import { FormGroup } from "@mui/material";
-import { PartyDto, WaitingListDto } from "../../ClientApi";
-import { GetDefaultWaitingList } from "../../ClientApi/ClientApi.ts";
+import { PartyDto, ValidationMessage } from "../../ClientApi";
+import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
+import { validatePartySize } from "../../Validators/WaitingListValidator.ts";
+import CurrentQueue from "./CurrentQueue.tsx";
 
-const AddToWaitingListComponent: React.FunctionComponent = () => {
-  const [waitingListMetaDataModel, setWaitingListMetaDataModel] = React.useState<WaitingListDto>();
-  const [errorMessages, setErrorMessages] = React.useState<ExtendedValidationMessage[]>();
-  const { model: partyModel, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
-    size: 0,
+interface Props {
+  parties: PartyDto[] | undefined;
+  seatsAvailable: number | undefined;
+  isLoading: boolean;
+  waitingListName: string;
+}
+
+const AddToWaitingListComponent = ({ parties, seatsAvailable, isLoading, waitingListName }: Props): React.ReactNode => {
+  const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
+  const [isDisabled, setDisabled] = React.useState(false);
+  const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
+    size: "" as unknown as number,
     name: "",
+    waitingListName: waitingListName,
   });
-  const { validationMessages } = useValidatedModel(partyModel, validatePartyDto);
+  const { validationMessages } = useValidatedModel(partyDto, validatePartyDto);
 
   React.useEffect(() => {
-    (async function () {
-      const metaData = await GetDefaultWaitingList();
-      setWaitingListMetaDataModel(metaData.waitingList);
-    })();
-  }, []);
+    const partySizeValidation = validatePartySize(partyDto.size, seatsAvailable ?? 0);
+    setMessages(partySizeValidation ? [partySizeValidation] : []);
+  }, [validationMessages]);
 
-  const onSubmitPress = (): void => {
-    const errorMessages = validationMessages.filter(
-      (validationMessage) => validationMessage.validationMessage.type === "error",
-    );
-    if (errorMessages.length > 0) {
-      setErrorMessages(errorMessages);
-    } else {
-      setErrorMessages(undefined);
+  const onSubmitPress = async (): Promise<void> => {
+    if (messages.length === 0 && validationMessages.length === 0) {
+      setDisabled(true);
+      const result = await AddToWaitingList({ party: partyDto });
+      setMessages(result.messages);
+      setDisabled(false);
     }
   };
-
-  const onCheckInPress = (): void => {};
 
   const onSizeChange = (value: number): void => {
     updatePartyModel("size", value);
@@ -50,29 +54,34 @@ const AddToWaitingListComponent: React.FunctionComponent = () => {
 
   return (
     <FormGroup style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}>
-      <ErrorComponent value={errorMessages} onClose={() => setErrorMessages(undefined)} />
+      <ErrorComponent messages={messages} onClose={() => setMessages([])} />
       <div style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}>
         <TextFieldComponent
           onChange={onNameChange}
           placeHolder={"Your name?"}
           errorMessage={getMessageForProperty("name", validationMessages, "error")}
           type={"text"}
-          value={partyModel.name}
+          value={partyDto.name}
           label={"Name"}
+          disabled={isDisabled || isLoading}
         />
         <NumberFieldComponent
           onChange={onSizeChange}
           placeHolder={"The size of your party?"}
           errorMessage={getMessageForProperty("size", validationMessages, "error")}
           type={"number"}
-          value={partyModel.size}
+          value={partyDto.size}
           label={"Size"}
+          disabled={isDisabled || isLoading}
         />
         <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <ButtonComponent text={"Submit"} onPress={onSubmitPress} disabled={validationMessages.length > 0} />
-          <ButtonComponent text={"Check in"} onPress={onCheckInPress} disabled={validationMessages.length > 0} />
+          <ButtonComponent
+            text={"Join the waiting list"}
+            onPress={onSubmitPress}
+            disabled={validationMessages.length > 0 || messages?.length > 0}
+          />
         </div>
-        <div>Total seats available: {waitingListMetaDataModel?.totalSeatsAvailable}</div>
+        <CurrentQueue parties={parties} availableSeats={seatsAvailable} />
       </div>
     </FormGroup>
   );
