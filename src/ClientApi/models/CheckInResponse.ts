@@ -20,6 +20,13 @@ import {
     ValidationMessageToJSON,
     ValidationMessageToJSONTyped,
 } from './ValidationMessage';
+import type { PartyDto } from './PartyDto';
+import {
+    PartyDtoFromJSON,
+    PartyDtoFromJSONTyped,
+    PartyDtoToJSON,
+    PartyDtoToJSONTyped,
+} from './PartyDto';
 
 /**
  * 
@@ -35,16 +42,10 @@ export interface CheckInResponse {
     messages: Array<ValidationMessage>;
     /**
      * 
-     * @type {boolean}
+     * @type {PartyDto}
      * @memberof CheckInResponse
      */
-    success?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckInResponse
-     */
-    name?: string;
+    party?: PartyDto;
 }
 
 /**
@@ -66,8 +67,7 @@ export function CheckInResponseFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'messages': ((json['messages'] as Array<any>).map(ValidationMessageFromJSON)),
-        'success': json['success'] == null ? undefined : json['success'],
-        'name': json['name'] == null ? undefined : json['name'],
+        'party': json['party'] == null ? undefined : PartyDtoFromJSON(json['party']),
     };
 }
 
@@ -83,8 +83,7 @@ export function CheckInResponseToJSONTyped(value?: CheckInResponse | null, ignor
     return {
         
         'messages': ((value['messages'] as Array<any>).map(ValidationMessageToJSON)),
-        'success': value['success'],
-        'name': value['name'],
+        'party': PartyDtoToJSON(value['party']),
     };
 }
 

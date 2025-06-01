@@ -1,6 +1,7 @@
 import { Configuration } from "./runtime.ts";
 import { WaitingListApi, PartyApi } from "./apis";
 import { AddToWaitingListRequest } from "./models";
+
 const customFetch: typeof fetch = (input: RequestInfo | URL, init = {}) => {
   return fetch(input, {
     ...init,

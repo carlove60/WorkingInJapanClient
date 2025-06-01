@@ -7,14 +7,17 @@ import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
 const WaitingListPage = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
-  const [, setRefresh] = React.useState(false);
-  const [party, setParty] = React.useState<PartyDto>();
+  const [partyLoaded, setPartyLoaded] = React.useState(false);
+  const [party, setParty] = React.useState<PartyDto | undefined>(undefined);
 
   const refreshParty = async () => {
-    setIsLoading(true);
     const partyResponse = await GetParty();
-    setParty(partyResponse.party);
-    setIsLoading(false);
+    if (partyResponse.party !== party) {
+      setPartyLoaded(false);
+      setParty(partyResponse.party);
+      setPartyLoaded(true);
+    }
+    return partyResponse.party;
   };
 
   React.useEffect(() => {
@@ -29,16 +32,16 @@ const WaitingListPage = () => {
   }, [party]);
 
   React.useEffect(() => {
-    (async function () {
-      setInterval(() => {
-        setRefresh((toggle) => !toggle);
-      }, 3000);
+    refreshParty();
 
-      return () => refreshParty();
-    })();
+    const interval = setInterval(async () => {
+      refreshParty();
+    }, 3000);
+
+    return () => clearInterval(interval); // Cleanup
   }, []);
 
-  return isLoading ? (
+  return isLoading || !partyLoaded ? (
     <div>少々お待ちください。。。</div>
   ) : party ? (
     <PartyComponent isLoading={isLoading} party={party} />
@@ -48,6 +51,7 @@ const WaitingListPage = () => {
       waitingListName={waitingList?.name ?? ""}
       parties={waitingList?.parties}
       seatsAvailable={waitingList?.seatsAvailable}
+      onCheckIn={setParty}
     />
   );
 };

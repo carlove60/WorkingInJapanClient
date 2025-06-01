@@ -10,38 +10,30 @@ interface Props {
 
 const PartyComponent = ({ party, isLoading }: Props) => {
   const [messages, setMessages] = React.useState<ValidationMessage[] | undefined>();
-  const [disabled, setDisabled] = React.useState(true);
-  const [isCheckedIn, setIsCheckedIn] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
 
   const onCheckInClick = async () => {
     setDisabled(true);
     const response = await CheckIn();
     setDisabled(false);
     setMessages(response.messages);
-    if (response.success) {
-      setIsCheckedIn(true);
-    } else {
-      setIsCheckedIn(false);
-    }
+  };
+
+  const isDisabled = () => {
+    return !party.canCheckIn || disabled || isLoading;
   };
 
   const getCheckInButton = () => {
     if (!party?.canCheckIn) {
       return null;
     }
-    return (
-      <ButtonComponent
-        text={"Click here to check in!"}
-        onPress={onCheckInClick}
-        disabled={!party.canCheckIn || disabled || isLoading}
-      />
-    );
+    return <ButtonComponent text={"Click here to check in!"} onPress={onCheckInClick} disabled={isDisabled()} />;
   };
   return (
     <>
       <ErrorComponent messages={messages} onClose={() => setMessages(undefined)} />
-      {isCheckedIn ? (
-        <div></div>
+      {party?.checkedIn ? (
+        <div>Thanks for checking in, please make your way to our restaurant, we will be expecting you!</div>
       ) : (
         <div>
           <div>Hey! {party?.name}, thank you for joining the waiting list.</div>

@@ -48,10 +48,10 @@ export interface AddToWaitingListResponse {
     partyName?: string;
     /**
      * 
-     * @type {Array<PartyDto>}
+     * @type {PartyDto}
      * @memberof AddToWaitingListResponse
      */
-    parties?: Array<PartyDto>;
+    party?: PartyDto;
 }
 
 /**
@@ -74,7 +74,7 @@ export function AddToWaitingListResponseFromJSONTyped(json: any, ignoreDiscrimin
         
         'messages': ((json['messages'] as Array<any>).map(ValidationMessageFromJSON)),
         'partyName': json['partyName'] == null ? undefined : json['partyName'],
-        'parties': json['parties'] == null ? undefined : ((json['parties'] as Array<any>).map(PartyDtoFromJSON)),
+        'party': json['party'] == null ? undefined : PartyDtoFromJSON(json['party']),
     };
 }
 
@@ -91,7 +91,7 @@ export function AddToWaitingListResponseToJSONTyped(value?: AddToWaitingListResp
         
         'messages': ((value['messages'] as Array<any>).map(ValidationMessageToJSON)),
         'partyName': value['partyName'],
-        'parties': value['parties'] == null ? undefined : ((value['parties'] as Array<any>).map(PartyDtoToJSON)),
+        'party': PartyDtoToJSON(value['party']),
     };
 }
 

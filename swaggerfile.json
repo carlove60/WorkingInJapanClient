@@ -172,11 +172,8 @@
           "partyName": {
             "type": "string"
           },
-          "parties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PartyDto"
-            }
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
           }
         },
         "additionalProperties": false
@@ -193,11 +190,8 @@
               "$ref": "#/components/schemas/ValidationMessage"
             }
           },
-          "success": {
-            "type": "boolean"
-          },
-          "name": {
-            "type": "string"
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
           }
         },
         "additionalProperties": false
@@ -247,6 +241,9 @@
             "format": "int32"
           },
           "canCheckIn": {
+            "type": "boolean"
+          },
+          "checkedIn": {
             "type": "boolean"
           }
         },

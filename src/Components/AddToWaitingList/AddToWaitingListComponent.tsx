@@ -18,9 +18,16 @@ interface Props {
   seatsAvailable: number | undefined;
   isLoading: boolean;
   waitingListName: string;
+  onCheckIn: (party: PartyDto | undefined) => void;
 }
 
-const AddToWaitingListComponent = ({ parties, seatsAvailable, isLoading, waitingListName }: Props): React.ReactNode => {
+const AddToWaitingListComponent = ({
+  parties,
+  seatsAvailable,
+  isLoading,
+  waitingListName,
+  onCheckIn,
+}: Props): React.ReactNode => {
   const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
   const [isDisabled, setDisabled] = React.useState(false);
   const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
@@ -39,6 +46,7 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, isLoading, waiting
     if (messages.length === 0 && validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: partyDto });
+      onCheckIn(result.party);
       setMessages(result.messages);
       setDisabled(false);
     }
@@ -52,8 +60,17 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, isLoading, waiting
     updatePartyModel("name", value);
   };
 
+  const onKeyUp = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      await onSubmitPress();
+    }
+  };
+
   return (
-    <FormGroup style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}>
+    <FormGroup
+      onKeyUp={onKeyUp}
+      style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}
+    >
       <ErrorComponent messages={messages} onClose={() => setMessages([])} />
       <div style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}>
         <TextFieldComponent
@@ -81,7 +98,8 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, isLoading, waiting
             disabled={validationMessages.length > 0 || messages?.length > 0}
           />
         </div>
-        <CurrentQueue parties={parties} availableSeats={seatsAvailable} />
+        <div>Total seats available: {seatsAvailable ?? 0}</div>
+        <CurrentQueue parties={parties} />
       </div>
     </FormGroup>
   );
