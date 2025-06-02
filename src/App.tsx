@@ -1,6 +1,5 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./Layout.tsx";
 import { styled } from "@mui/material/styles";
 import { FrontPage } from "./Pages/FrontPage.tsx";
 
@@ -19,7 +18,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />, // A common layout with a navbar
+      element: undefined,
       children: [
         { index: true, element: <FrontPage /> },
         { path: "*", element: <FrontPage /> },

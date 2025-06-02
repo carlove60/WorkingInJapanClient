@@ -1,22 +1,25 @@
 import * as React from "react";
 import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWaitingListComponent.tsx";
-import PartyComponent from "../../Components/PartyComponent.tsx";
-import { PartyDto, WaitingListDto } from "../../ClientApi";
+import PartyComponent from "../../Components/PartyComponent/PartyComponent.tsx";
+import { PartyDto, ValidationMessage, WaitingListDto } from "../../ClientApi";
 import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
 import { usePolling } from "../../Hooks/usePolling.ts";
 import { isNotNullOrEmpty } from "../../Helpers/StringHelper.ts";
 import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
+import { Paper } from "@mui/material";
+import MessageComponent from "../../Components/Error/ErrorComponent.tsx";
+import Box from "@mui/material/Box";
 
 const WaitingList = () => {
   const [party, setParty] = React.useState<PartyDto>();
   const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
+  const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
       // Just to see if there is already a party for this session
       // No need to show any messages
-      const party = await GetParty();
-      setParty(party.party ?? {});
+      refreshParty();
     };
 
     fetchData();
@@ -29,8 +32,10 @@ const WaitingList = () => {
 
   const refreshWaitingList = React.useCallback(async () => {
     const waitingListResponse = await GetWaitingList();
-    setWaitingList(waitingListResponse.waitingList);
-  }, []);
+    if (waitingListResponse.waitingList !== waitingList) {
+      setWaitingList(waitingListResponse.waitingList);
+    }
+  }, [setWaitingList]);
 
   const enableRefreshParty = (): boolean => {
     return isNotNullOrUndefined(party) && isNotNullOrEmpty(party.sessionId);
@@ -43,17 +48,30 @@ const WaitingList = () => {
   usePolling(refreshParty, enableRefreshParty());
   usePolling(refreshWaitingList, enableRefreshWaitingList());
 
-  return party === undefined ? (
-    <div>少々お待ちください。。。</div>
-  ) : party.sessionId ? (
-    <PartyComponent party={party} />
-  ) : (
-    <AddToWaitingListComponent
-      onSignUp={setParty}
-      waitingListName={waitingList?.name}
-      parties={waitingList?.parties}
-      seatsAvailable={waitingList?.seatsAvailable}
-    />
+  const getCurrentComponent = () => {
+    return party === undefined ? (
+      <div>少々お待ちください。。。</div>
+    ) : party.sessionId ? (
+      <PartyComponent party={party} setMessages={setMessages} />
+    ) : (
+      <AddToWaitingListComponent
+        onSignUp={setParty}
+        waitingListName={waitingList?.name}
+        parties={waitingList?.parties}
+        seatsAvailable={waitingList?.seatsAvailable}
+        messages={messages}
+        setMessages={setMessages}
+      />
+    );
+  };
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <MessageComponent messages={messages} onClose={() => setMessages([])} />
+      <Paper elevation={3} sx={{ p: 3, mb: 3, width: 300 }}>
+        {getCurrentComponent()}
+      </Paper>
+    </Box>
   );
 };
 

@@ -1,10 +1,9 @@
 import WaitingList from "./WaitingList/WaitingList.tsx";
-import { FormGroup } from "@mui/material";
 
 export const FrontPage = () => {
   return (
-    <FormGroup>
+    <div>
       <WaitingList />
-    </FormGroup>
+    </div>
   );
 };

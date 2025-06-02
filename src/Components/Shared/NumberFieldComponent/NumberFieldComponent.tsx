@@ -1,9 +1,11 @@
 import * as React from "react";
-import FieldComponent, { SharedFieldComponentProps } from "./FieldComponent.tsx";
+import FieldComponent, { SharedFieldComponentProps } from "../FieldComponent/FieldComponent.tsx";
+import { SxProps, Theme } from "@mui/material";
 
 interface NumberFieldComponentProps extends SharedFieldComponentProps {
   onChange: (value: number) => void;
   value: number | undefined;
+  sx: SxProps<Theme>;
 }
 
 const NumberFieldComponent = ({
@@ -14,6 +16,7 @@ const NumberFieldComponent = ({
   type,
   placeHolder,
   disabled,
+  sx,
 }: NumberFieldComponentProps) => {
   const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.currentTarget.valueAsNumber);
@@ -28,6 +31,7 @@ const NumberFieldComponent = ({
       errorMessage={errorMessage}
       type={type}
       disabled={disabled}
+      sx={sx}
     />
   );
 };

@@ -47,6 +47,12 @@ export interface WaitingListDto {
     totalSeats?: number;
     /**
      * 
+     * @type {PartyDto}
+     * @memberof WaitingListDto
+     */
+    addedParty?: PartyDto;
+    /**
+     * 
      * @type {number}
      * @memberof WaitingListDto
      */
@@ -81,6 +87,7 @@ export function WaitingListDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         'name': json['name'],
         'id': json['id'] == null ? undefined : json['id'],
         'totalSeats': json['totalSeats'] == null ? undefined : json['totalSeats'],
+        'addedParty': json['addedParty'] == null ? undefined : PartyDtoFromJSON(json['addedParty']),
         'seatsAvailable': json['seatsAvailable'],
         'parties': json['parties'] == null ? undefined : ((json['parties'] as Array<any>).map(PartyDtoFromJSON)),
     };
@@ -100,6 +107,7 @@ export function WaitingListDtoToJSONTyped(value?: WaitingListDto | null, ignoreD
         'name': value['name'],
         'id': value['id'],
         'totalSeats': value['totalSeats'],
+        'addedParty': PartyDtoToJSON(value['addedParty']),
         'seatsAvailable': value['seatsAvailable'],
         'parties': value['parties'] == null ? undefined : ((value['parties'] as Array<any>).map(PartyDtoToJSON)),
     };

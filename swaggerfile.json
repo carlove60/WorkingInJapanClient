@@ -169,9 +169,6 @@
               "$ref": "#/components/schemas/ValidationMessage"
             }
           },
-          "partyName": {
-            "type": "string"
-          },
           "party": {
             "$ref": "#/components/schemas/PartyDto"
           }

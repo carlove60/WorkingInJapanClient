@@ -1,30 +1,39 @@
 import * as React from "react";
-import ButtonComponent from "../Shared/ButtonComponent.tsx";
+import ButtonComponent from "../Shared/ButtonComponent/ButtonComponent.tsx";
 import useUpdateModel from "../../Hooks/useUpdateModel.ts";
 import { validatePartyDto } from "../../Validators/PartyModelValidator.ts";
 import useValidatedModel from "../../Hooks/useValidatedModel.ts";
-import ErrorComponent from "../Error/ErrorComponent.tsx";
-import TextFieldComponent from "../Shared/TextFieldComponent.tsx";
-import NumberFieldComponent from "../Shared/NumberFieldComponent.tsx";
+import TextFieldComponent from "../Shared/TextFieldComponent/TextFieldComponent.tsx";
+import NumberFieldComponent from "../Shared/NumberFieldComponent/NumberFieldComponent.tsx";
 import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper.ts";
-import { FormGroup } from "@mui/material";
 import { PartyDto, ValidationMessage } from "../../ClientApi";
 import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
 import { validatePartySize } from "../../Validators/WaitingListValidator.ts";
-import CurrentQueue from "./CurrentQueue.tsx";
+import CurrentQueue from "../CurrentQueueComponent/CurrentQueue.tsx";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { SxProps, Theme } from "@mui/material";
 
-interface Props {
+export interface Props {
   parties: PartyDto[] | undefined;
   seatsAvailable: number | undefined;
   waitingListName: string | undefined;
   onSignUp: (party: PartyDto | undefined) => void;
+  setMessages: (message: ValidationMessage[]) => void;
+  messages: ValidationMessage[];
 }
 
-const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, onSignUp }: Props): React.ReactNode => {
-  const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
+const AddToWaitingListComponent = ({
+  parties,
+  seatsAvailable,
+  waitingListName,
+  onSignUp,
+  setMessages,
+  messages,
+}: Props): React.ReactNode => {
   const [isDisabled, setDisabled] = React.useState(false);
   const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
-    size: "" as unknown as number,
+    size: 0,
     name: "",
     waitingListName: waitingListName,
   });
@@ -33,13 +42,16 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, o
   React.useEffect(() => {
     const partySizeValidation = validatePartySize(partyDto.size, seatsAvailable ?? 0);
     setMessages(partySizeValidation ? [partySizeValidation] : []);
-  }, [validationMessages]);
+  }, [partyDto.size, validationMessages, setMessages, seatsAvailable]);
 
   const onSubmitPress = async (): Promise<void> => {
     if (messages.length === 0 && validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
-      onSignUp(result.party);
+      const noErrorMessages = result.messages.filter((m) => m.type === "error").length === 0;
+      if (noErrorMessages) {
+        onSignUp(result.party);
+      }
       setMessages(result.messages);
       setDisabled(false);
     }
@@ -59,13 +71,20 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, o
     }
   };
 
+  const isButtonDisabled = (): boolean => {
+    return validationMessages.length > 0 || messages?.length > 0 || seatsAvailable === 0 || isDisabled;
+  };
+
+  const sx: SxProps<Theme> = {
+    height: 50,
+  };
+
   return (
-    <FormGroup
-      onKeyUp={onKeyUp}
-      style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}
-    >
-      <ErrorComponent messages={messages} onClose={() => setMessages([])} />
-      <div style={{ width: "400px", display: "flex", flexDirection: "column", verticalAlign: "center" }}>
+    <>
+      <Typography variant="h6" gutterBottom>
+        Join the Waitlist
+      </Typography>
+      <Box onKeyUp={onKeyUp} display="flex" flexDirection="column" gap={2}>
         <TextFieldComponent
           onChange={onNameChange}
           placeHolder={"Your name?"}
@@ -74,6 +93,7 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, o
           value={partyDto.name}
           label={"Name"}
           disabled={isDisabled}
+          sx={sx}
         />
         <NumberFieldComponent
           onChange={onSizeChange}
@@ -83,18 +103,15 @@ const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, o
           value={partyDto.size}
           label={"Size"}
           disabled={isDisabled}
+          sx={sx}
         />
         <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <ButtonComponent
-            text={"Join the waiting list"}
-            onPress={onSubmitPress}
-            disabled={validationMessages.length > 0 || messages?.length > 0}
-          />
+          <ButtonComponent text={"Join the waiting list"} onPress={onSubmitPress} disabled={isButtonDisabled()} />
         </div>
         <div>Total seats available: {seatsAvailable ?? 0}</div>
         <CurrentQueue parties={parties} />
-      </div>
-    </FormGroup>
+      </Box>
+    </>
   );
 };
 

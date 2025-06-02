@@ -1,6 +1,6 @@
 import * as React from "react";
-import { TextField } from "@mui/material";
-import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
+import { SxProps, TextField, Theme } from "@mui/material";
+import { isNotNullOrUndefined } from "../../../Helpers/Guard.ts";
 
 export interface FieldComponentProps extends SharedFieldComponentProps {
   value: string | number | null | undefined;
@@ -13,9 +13,19 @@ export interface SharedFieldComponentProps {
   placeHolder: string;
   errorMessage: string;
   disabled: boolean;
+  sx: SxProps<Theme>;
 }
 
-const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolder, disabled }: FieldComponentProps) => {
+const FieldComponent = ({
+  type,
+  label,
+  value,
+  onChange,
+  errorMessage,
+  placeHolder,
+  disabled,
+  sx,
+}: FieldComponentProps) => {
   const onContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (isNotNullOrUndefined(onChange)) {
@@ -38,6 +48,7 @@ const FieldComponent = ({ type, label, value, onChange, errorMessage, placeHolde
       onChange={onContentChange}
       value={value}
       disabled={disabled}
+      sx={sx}
     />
   );
 };

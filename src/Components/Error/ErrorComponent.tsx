@@ -1,50 +1,49 @@
-import { Alert } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import { Alert, Box, Collapse, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Collapse from "@mui/material/Collapse";
 import * as React from "react";
 import { isNullOrUndefined } from "../../Helpers/Guard.ts";
-import { ValidationMessage } from "../../ClientApi";
+import { MessageType, ValidationMessage } from "../../ClientApi";
 
 const ErrorComponent = ({ messages, onClose }: { messages: ValidationMessage[] | undefined; onClose: () => void }) => {
   const [open, setOpen] = React.useState(true);
 
-  if (isNullOrUndefined(messages)) {
-    return null;
-  }
-
-  const getValidationMessages = () => {
-    return messages.map((message) => {
-      return (
-        <Collapse style={{ position: "absolute" }} in={open || !isNullOrUndefined(message)}>
-          <Alert
-            severity={message.type}
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpen(false);
-                  onClose();
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            sx={{ mb: 2, whiteSpace: "pre-line" }}
-          >
-            <span key={message.message}>
-              {message.message}
-              <br />
-            </span>
-          </Alert>
-        </Collapse>
-      );
-    });
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
   };
 
-  return getValidationMessages();
+  const hasMessages = !isNullOrUndefined(messages) && messages.length > 0;
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        minHeight: 64,
+        mb: 2,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Collapse in={open && hasMessages} unmountOnExit>
+        {messages?.map((message) => (
+          <Collapse in={open || !isNullOrUndefined(message)} key={message.message}>
+            <Alert
+              severity={message.type.toLowerCase() as MessageType}
+              action={
+                <IconButton aria-label="close" color="inherit" size="small" onClick={handleClose}>
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ whiteSpace: "pre-line" }}
+            >
+              {message.message}
+            </Alert>
+          </Collapse>
+        ))}
+      </Collapse>
+    </Box>
+  );
 };
 
 export default ErrorComponent;
