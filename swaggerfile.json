@@ -1,0 +1,333 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WaitingList.Api",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5240"
+    }
+  ],
+  "paths": {
+    "/api/party/check-in": {
+      "post": {
+        "tags": [
+          "Party"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-party": {
+      "get": {
+        "tags": [
+          "Party"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPartyResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPartyResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPartyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waiting-list/waiting-list": {
+      "get": {
+        "tags": [
+          "WaitingList"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaitingListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaitingListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaitingListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waiting-list/add-party-to-waitinglist": {
+      "post": {
+        "tags": [
+          "WaitingList"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddToWaitingListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddToWaitingListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddToWaitingListRequest": {
+        "type": "object",
+        "properties": {
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddToWaitingListResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckInResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPartyResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "party": {
+            "$ref": "#/components/schemas/PartyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageType": {
+        "enum": [
+          "success",
+          "info",
+          "warning",
+          "error"
+        ],
+        "type": "String"
+      },
+      "PartyDto": {
+        "type": "object",
+        "properties": {
+          "waitingListName": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "canCheckIn": {
+            "type": "boolean"
+          },
+          "checkedIn": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationMessage": {
+        "required": [
+          "message",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MessageType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaitingListDto": {
+        "required": [
+          "name",
+          "seatsAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalSeats": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "addedParty": {
+            "$ref": "#/components/schemas/PartyDto"
+          },
+          "seatsAvailable": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartyDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaitingListResponse": {
+        "required": [
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationMessage"
+            }
+          },
+          "waitingList": {
+            "$ref": "#/components/schemas/WaitingListDto"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}
