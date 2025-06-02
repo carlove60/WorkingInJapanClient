@@ -284,6 +284,9 @@
             "type": "integer",
             "format": "int32"
           },
+          "addedParty": {
+            "$ref": "#/components/schemas/PartyDto"
+          },
           "seatsAvailable": {
             "type": "integer",
             "format": "int32"

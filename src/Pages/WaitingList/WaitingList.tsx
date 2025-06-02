@@ -5,6 +5,7 @@ import { PartyDto, WaitingListDto } from "../../ClientApi";
 import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
 import { usePolling } from "../../Hooks/usePolling.ts";
 import { isNotNullOrEmpty } from "../../Helpers/StringHelper.ts";
+import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
 
 const WaitingList = () => {
   const [party, setParty] = React.useState<PartyDto>();
@@ -21,20 +22,26 @@ const WaitingList = () => {
     fetchData();
   }, []);
 
-  const refreshParty = async () => {
+  const refreshParty = React.useCallback(async () => {
     const partyResponse = await GetParty();
-    if (partyResponse.party !== party) {
-      setParty(partyResponse.party ?? {});
-    }
-  };
+    setParty(partyResponse.party ?? {});
+  }, [setParty]);
 
-  const refreshWaitingList = async () => {
+  const refreshWaitingList = React.useCallback(async () => {
     const waitingListResponse = await GetWaitingList();
     setWaitingList(waitingListResponse.waitingList);
+  }, []);
+
+  const enableRefreshParty = (): boolean => {
+    return isNotNullOrUndefined(party) && isNotNullOrEmpty(party.sessionId);
   };
 
-  usePolling(refreshParty, party !== undefined && isNotNullOrEmpty(party.sessionId));
-  usePolling(refreshWaitingList, party === undefined);
+  const enableRefreshWaitingList = (): boolean => {
+    return party !== undefined;
+  };
+
+  usePolling(refreshParty, enableRefreshParty());
+  usePolling(refreshWaitingList, enableRefreshWaitingList());
 
   return party === undefined ? (
     <div>少々お待ちください。。。</div>
