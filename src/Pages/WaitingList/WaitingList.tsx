@@ -3,57 +3,51 @@ import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWa
 import PartyComponent from "../../Components/PartyComponent.tsx";
 import { PartyDto, WaitingListDto } from "../../ClientApi";
 import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
+import { usePolling } from "../../Hooks/usePolling.ts";
+import { isNotNullOrEmpty } from "../../Helpers/StringHelper.ts";
 
-const WaitingListPage = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
+const WaitingList = () => {
+  const [party, setParty] = React.useState<PartyDto>();
   const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
-  const [partyLoaded, setPartyLoaded] = React.useState(false);
-  const [party, setParty] = React.useState<PartyDto | undefined>(undefined);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      // Just to see if there is already a party for this session
+      // No need to show any messages
+      const party = await GetParty();
+      setParty(party.party ?? {});
+    };
+
+    fetchData();
+  }, []);
 
   const refreshParty = async () => {
     const partyResponse = await GetParty();
     if (partyResponse.party !== party) {
-      setPartyLoaded(false);
-      setParty(partyResponse.party);
-      setPartyLoaded(true);
+      setParty(partyResponse.party ?? {});
     }
-    return partyResponse.party;
   };
 
-  React.useEffect(() => {
-    if (party === undefined) {
-      (async function () {
-        setIsLoading(true);
-        const waitingListResponse = await GetWaitingList();
-        setWaitingList(waitingListResponse.waitingList);
-        setIsLoading(false);
-      })();
-    }
-  }, [party]);
+  const refreshWaitingList = async () => {
+    const waitingListResponse = await GetWaitingList();
+    setWaitingList(waitingListResponse.waitingList);
+  };
 
-  React.useEffect(() => {
-    refreshParty();
+  usePolling(refreshParty, party !== undefined && isNotNullOrEmpty(party.sessionId));
+  usePolling(refreshWaitingList, party === undefined);
 
-    const interval = setInterval(async () => {
-      refreshParty();
-    }, 3000);
-
-    return () => clearInterval(interval); // Cleanup
-  }, []);
-
-  return isLoading || !partyLoaded ? (
+  return party === undefined ? (
     <div>少々お待ちください。。。</div>
-  ) : party ? (
-    <PartyComponent isLoading={isLoading} party={party} />
+  ) : party.sessionId ? (
+    <PartyComponent party={party} />
   ) : (
     <AddToWaitingListComponent
-      isLoading={isLoading}
-      waitingListName={waitingList?.name ?? ""}
+      onSignUp={setParty}
+      waitingListName={waitingList?.name}
       parties={waitingList?.parties}
       seatsAvailable={waitingList?.seatsAvailable}
-      onCheckIn={setParty}
     />
   );
 };
 
-export default WaitingListPage;
+export default WaitingList;

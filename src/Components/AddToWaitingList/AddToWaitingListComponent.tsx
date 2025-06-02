@@ -16,18 +16,11 @@ import CurrentQueue from "./CurrentQueue.tsx";
 interface Props {
   parties: PartyDto[] | undefined;
   seatsAvailable: number | undefined;
-  isLoading: boolean;
-  waitingListName: string;
-  onCheckIn: (party: PartyDto | undefined) => void;
+  waitingListName: string | undefined;
+  onSignUp: (party: PartyDto | undefined) => void;
 }
 
-const AddToWaitingListComponent = ({
-  parties,
-  seatsAvailable,
-  isLoading,
-  waitingListName,
-  onCheckIn,
-}: Props): React.ReactNode => {
+const AddToWaitingListComponent = ({ parties, seatsAvailable, waitingListName, onSignUp }: Props): React.ReactNode => {
   const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
   const [isDisabled, setDisabled] = React.useState(false);
   const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
@@ -45,8 +38,8 @@ const AddToWaitingListComponent = ({
   const onSubmitPress = async (): Promise<void> => {
     if (messages.length === 0 && validationMessages.length === 0) {
       setDisabled(true);
-      const result = await AddToWaitingList({ party: partyDto });
-      onCheckIn(result.party);
+      const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
+      onSignUp(result.party);
       setMessages(result.messages);
       setDisabled(false);
     }
@@ -80,7 +73,7 @@ const AddToWaitingListComponent = ({
           type={"text"}
           value={partyDto.name}
           label={"Name"}
-          disabled={isDisabled || isLoading}
+          disabled={isDisabled}
         />
         <NumberFieldComponent
           onChange={onSizeChange}
@@ -89,7 +82,7 @@ const AddToWaitingListComponent = ({
           type={"number"}
           value={partyDto.size}
           label={"Size"}
-          disabled={isDisabled || isLoading}
+          disabled={isDisabled}
         />
         <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <ButtonComponent
