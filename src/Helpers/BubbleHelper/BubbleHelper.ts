@@ -1,4 +1,4 @@
-import { ValidationMessage } from "../ClientApi";
+import { ValidationMessage } from "../../ClientApi";
 
 export const groupMessages = (messages: ValidationMessage[]) => {
   if (!messages || !messages.length) {

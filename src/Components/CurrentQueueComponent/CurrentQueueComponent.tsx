@@ -1,5 +1,5 @@
 import { PartyDto } from "../../ClientApi";
-import { isNullOrUndefined } from "../../Helpers/Guard.ts";
+import { isNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,7 +8,7 @@ interface Props {
   parties: PartyDto[] | undefined;
 }
 
-const CurrentQueue = ({ parties }: Props): React.ReactElement | null => {
+const CurrentQueueComponent = ({ parties }: Props): React.ReactElement | null => {
   if (isNullOrUndefined(parties) || parties.length === 0) {
     return null;
   }
@@ -21,8 +21,8 @@ const CurrentQueue = ({ parties }: Props): React.ReactElement | null => {
       {parties.length === 0 ? (
         <Typography>No parties in the queue.</Typography>
       ) : (
-        parties.map((party) => (
-          <div>
+        parties.map((party, index) => (
+          <div key={index}>
             {party.name} ({party.size}
           </div>
         ))
@@ -31,4 +31,4 @@ const CurrentQueue = ({ parties }: Props): React.ReactElement | null => {
   );
 };
 
-export default CurrentQueue;
+export default CurrentQueueComponent;

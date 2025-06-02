@@ -1,7 +1,7 @@
 import { AddToWaitingListResponse, AddToWaitingListRequest, GetPartyResponse, CheckInResponse } from "./models";
 import { PartyClient, WaitingListClient } from "./ApiControllers.ts";
 import { WaitingListResponse } from "./models";
-import { handleMessages, transformException } from "../Helpers/ApiClientHelper.ts";
+import { handleMessages, transformException } from "../Helpers/ApiClientHelper/ApiClientHelper.ts";
 
 export const AddToWaitingList = async (request: AddToWaitingListRequest): Promise<AddToWaitingListResponse> => {
   return await BaseCallWithRequest<AddToWaitingListResponse, AddToWaitingListRequest>(

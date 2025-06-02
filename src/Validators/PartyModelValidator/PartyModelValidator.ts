@@ -1,7 +1,7 @@
-import { MessageType, ValidationMessage, PartyDto } from "../ClientApi";
-import { isNullOrEmpty } from "../Helpers/StringHelper.ts";
-import { isNumeric } from "../Helpers/NumberHelper.ts";
-import { isNullOrUndefined } from "../Helpers/Guard.ts";
+import { MessageType, ValidationMessage, PartyDto } from "../../ClientApi";
+import { isNullOrEmpty } from "../../Helpers/StringHelper/StringHelper.ts";
+import { isNumeric } from "../../Helpers/NumberHelper/NumberHelper.ts";
+import { isNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 
 export interface ExtendedValidationMessage {
   validationMessage: ValidationMessage;

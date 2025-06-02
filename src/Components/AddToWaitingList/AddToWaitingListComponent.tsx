@@ -1,15 +1,15 @@
 import * as React from "react";
 import ButtonComponent from "../Shared/ButtonComponent/ButtonComponent.tsx";
-import useUpdateModel from "../../Hooks/useUpdateModel.ts";
-import { validatePartyDto } from "../../Validators/PartyModelValidator.ts";
-import useValidatedModel from "../../Hooks/useValidatedModel.ts";
+import useUpdateModel from "../../Hooks/UseUpdateModel/useUpdateModel.ts";
+import { validatePartyDto } from "../../Validators/PartyModelValidator/PartyModelValidator.ts";
+import useValidatedModel from "../../Hooks/UseValidatedModel/useValidatedModel.ts";
 import TextFieldComponent from "../Shared/TextFieldComponent/TextFieldComponent.tsx";
 import NumberFieldComponent from "../Shared/NumberFieldComponent/NumberFieldComponent.tsx";
-import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper.ts";
+import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
 import { PartyDto, ValidationMessage } from "../../ClientApi";
 import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
-import { validatePartySize } from "../../Validators/WaitingListValidator.ts";
-import CurrentQueue from "../CurrentQueueComponent/CurrentQueue.tsx";
+import { validatePartySize } from "../../Validators/WaitingListvalidator/WaitingListValidator.ts";
+import CurrentQueueComponent from "../CurrentQueueComponent/CurrentQueueComponent.tsx";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { SxProps, Theme } from "@mui/material";
@@ -109,7 +109,7 @@ const AddToWaitingListComponent = ({
           <ButtonComponent text={"Join the waiting list"} onPress={onSubmitPress} disabled={isButtonDisabled()} />
         </div>
         <div>Total seats available: {seatsAvailable ?? 0}</div>
-        <CurrentQueue parties={parties} />
+        <CurrentQueueComponent parties={parties} />
       </Box>
     </>
   );

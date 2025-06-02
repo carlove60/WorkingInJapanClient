@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ExtendedValidationMessage } from "../Validators/PartyModelValidator.ts";
+import { ExtendedValidationMessage } from "../../Validators/PartyModelValidator/PartyModelValidator.ts";
 
 function useValidatedModel<TModel>(
   model: TModel | undefined,

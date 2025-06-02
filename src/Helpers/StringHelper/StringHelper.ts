@@ -1,4 +1,4 @@
-import { isNotNullOrUndefined, isNullOrUndefined } from "./Guard.ts";
+import { isNotNullOrUndefined, isNullOrUndefined } from "../Guard/Guard.ts";
 
 type NullableString = string | null | undefined;
 

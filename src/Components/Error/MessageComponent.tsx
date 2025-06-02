@@ -1,10 +1,16 @@
 import { Alert, Box, Collapse, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import * as React from "react";
-import { isNullOrUndefined } from "../../Helpers/Guard.ts";
+import { isNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import { MessageType, ValidationMessage } from "../../ClientApi";
 
-const ErrorComponent = ({ messages, onClose }: { messages: ValidationMessage[] | undefined; onClose: () => void }) => {
+const MessageComponent = ({
+  messages,
+  onClose,
+}: {
+  messages: ValidationMessage[] | undefined;
+  onClose: () => void;
+}) => {
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
@@ -46,4 +52,4 @@ const ErrorComponent = ({ messages, onClose }: { messages: ValidationMessage[] |
   );
 };
 
-export default ErrorComponent;
+export default MessageComponent;

@@ -1,5 +1,5 @@
-import { ExtendedValidationMessage } from "../Validators/PartyModelValidator.ts";
-import { MessageType } from "../ClientApi";
+import { ExtendedValidationMessage } from "../../Validators/PartyModelValidator/PartyModelValidator.ts";
+import { MessageType } from "../../ClientApi";
 
 export function getMessageForProperty<T>(
   fieldName: keyof T,

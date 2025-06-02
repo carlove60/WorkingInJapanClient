@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MessageType, ValidationMessage } from "../../../generated-api/models";
+import { MessageType, ValidationMessage } from "../../ClientApi";
 
 interface ErrorState {
   messages: ValidationMessage[];

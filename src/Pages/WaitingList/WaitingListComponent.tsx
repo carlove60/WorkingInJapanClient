@@ -3,14 +3,14 @@ import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWa
 import PartyComponent from "../../Components/PartyComponent/PartyComponent.tsx";
 import { PartyDto, ValidationMessage, WaitingListDto } from "../../ClientApi";
 import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
-import { usePolling } from "../../Hooks/usePolling.ts";
-import { isNotNullOrEmpty } from "../../Helpers/StringHelper.ts";
-import { isNotNullOrUndefined } from "../../Helpers/Guard.ts";
+import { usePolling } from "../../Hooks/UsePolling/usePolling.ts";
+import { isNotNullOrEmpty } from "../../Helpers/StringHelper/StringHelper.ts";
+import { isNotNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import { Paper } from "@mui/material";
-import MessageComponent from "../../Components/Error/ErrorComponent.tsx";
+import MessageComponent from "../../Components/Error/MessageComponent.tsx";
 import Box from "@mui/material/Box";
 
-const WaitingList = () => {
+const WaitingListComponent = () => {
   const [party, setParty] = React.useState<PartyDto>();
   const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
   const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
@@ -75,4 +75,4 @@ const WaitingList = () => {
   );
 };
 
-export default WaitingList;
+export default WaitingListComponent;

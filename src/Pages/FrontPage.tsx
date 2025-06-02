@@ -1,9 +1,9 @@
-import WaitingList from "./WaitingList/WaitingList.tsx";
+import WaitingListComponent from "./WaitingList/WaitingListComponent.tsx";
 
 export const FrontPage = () => {
   return (
     <div>
-      <WaitingList />
+      <WaitingListComponent />
     </div>
   );
 };

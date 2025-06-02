@@ -1,5 +1,5 @@
 import * as React from "react";
-import { isNotNullOrEmpty } from "../Helpers/StringHelper.ts";
+import { isNotNullOrEmpty } from "../../Helpers/StringHelper/StringHelper.ts";
 
 function useUpdateModel<T>(initialValue: T) {
   const [model, setModel] = React.useState<T>(initialValue);

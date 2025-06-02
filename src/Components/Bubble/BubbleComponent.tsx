@@ -7,7 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import InfoIcon from "@mui/icons-material/Info";
 import ErrorIcon from "@mui/icons-material/Error";
 import WarningIcon from "@mui/icons-material/Warning";
-import { isNullOrUndefined } from "../../Helpers/Guard.ts";
+import { isNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import { MessageType } from "../../ClientApi";
 
 const BubbleComponent = () => {
