@@ -4,7 +4,7 @@ Have npm installed
 ### Clone
 Clone the repository
 
-### Instaling
+### Installing
 run npm install in the root of the directory in a terminal or via your preferred IDE.
 
 ### Running
