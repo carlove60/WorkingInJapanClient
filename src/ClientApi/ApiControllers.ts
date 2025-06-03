@@ -6,6 +6,10 @@ const customFetch: typeof fetch = (input: RequestInfo | URL, init = {}) => {
   return fetch(input, {
     ...init,
     credentials: "include", // Make sure cookies are sent and received
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "*/*",
+    },
   });
 };
 
