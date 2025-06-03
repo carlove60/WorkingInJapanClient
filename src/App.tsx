@@ -2,6 +2,7 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FrontPage } from "./Pages/FrontPage.tsx";
+import Layout from "./Layout.tsx";
 
 function App() {
   const Root = styled("div")(({ theme }) => ({
@@ -18,7 +19,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: undefined,
+      element: <Layout />,
       children: [
         { index: true, element: <FrontPage /> },
         { path: "*", element: <FrontPage /> },
