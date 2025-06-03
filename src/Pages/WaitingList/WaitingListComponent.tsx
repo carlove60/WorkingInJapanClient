@@ -27,13 +27,13 @@ const WaitingListComponent = () => {
 
   const refreshParty = React.useCallback(async () => {
     const partyResponse = await GetParty();
-    setParty(partyResponse.party ?? {});
+    setParty(partyResponse?.party ?? {});
   }, [setParty]);
 
   const refreshWaitingList = React.useCallback(async () => {
     const waitingListResponse = await GetWaitingList();
-    if (waitingListResponse.waitingList !== waitingList) {
-      setWaitingList(waitingListResponse.waitingList);
+    if (waitingListResponse?.waitingList !== waitingList) {
+      setWaitingList(waitingListResponse?.waitingList);
     }
   }, [setWaitingList]);
 
