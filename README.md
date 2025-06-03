@@ -1,3 +1,8 @@
+## Welcome!
+Thank you for taking the time and effort to read, understand and review my code!
+This is a coding assignment and for that reason there is no protection nor will this be maintained. 
+Also, the commit messages will probably be very nonsensical since I am the only one working on this repo and have no intention on working on this further.
+
 ## Pre-requisites
 Have npm installed
 
