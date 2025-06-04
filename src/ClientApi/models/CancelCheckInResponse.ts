@@ -31,36 +31,36 @@ import {
 /**
  * 
  * @export
- * @interface GetPartyResponse
+ * @interface CancelCheckInResponse
  */
-export interface GetPartyResponse {
+export interface CancelCheckInResponse {
     /**
      * 
      * @type {Array<ValidationMessage>}
-     * @memberof GetPartyResponse
+     * @memberof CancelCheckInResponse
      */
     messages: Array<ValidationMessage>;
     /**
      * 
      * @type {PartyDto}
-     * @memberof GetPartyResponse
+     * @memberof CancelCheckInResponse
      */
     party?: PartyDto;
 }
 
 /**
- * Check if a given object implements the GetPartyResponse interface.
+ * Check if a given object implements the CancelCheckInResponse interface.
  */
-export function instanceOfGetPartyResponse(value: object): value is GetPartyResponse {
+export function instanceOfCancelCheckInResponse(value: object): value is CancelCheckInResponse {
     if (!('messages' in value) || value['messages'] === undefined) return false;
     return true;
 }
 
-export function GetPartyResponseFromJSON(json: any): GetPartyResponse {
-    return GetPartyResponseFromJSONTyped(json, false);
+export function CancelCheckInResponseFromJSON(json: any): CancelCheckInResponse {
+    return CancelCheckInResponseFromJSONTyped(json, false);
 }
 
-export function GetPartyResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GetPartyResponse {
+export function CancelCheckInResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): CancelCheckInResponse {
     if (json == null) {
         return json;
     }
@@ -71,11 +71,11 @@ export function GetPartyResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function GetPartyResponseToJSON(json: any): GetPartyResponse {
-    return GetPartyResponseToJSONTyped(json, false);
+export function CancelCheckInResponseToJSON(json: any): CancelCheckInResponse {
+    return CancelCheckInResponseToJSONTyped(json, false);
 }
 
-export function GetPartyResponseToJSONTyped(value?: GetPartyResponse | null, ignoreDiscriminator: boolean = false): any {
+export function CancelCheckInResponseToJSONTyped(value?: CancelCheckInResponse | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

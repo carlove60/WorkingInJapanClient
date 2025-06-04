@@ -39,6 +39,10 @@ jest.mock("../../ClientApi/ClientApi", () => ({
   }),
 }));
 
+jest.mock("@toolpad/core/useDialogs", () => ({
+  useDialogs: jest.fn(),
+}));
+
 // Mock the polling behavior (disable periodic calls during tests)
 (usePolling as jest.Mock).mockImplementation((callback: () => void, enabled: boolean) => {
   if (enabled) {

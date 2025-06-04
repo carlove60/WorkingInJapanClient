@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import BubbleComponent from "./Components/Bubble/BubbleComponent.tsx";
+import BubbleComponent from "./Components/BubbleComponent/BubbleComponent.tsx";
 import Box from "@mui/material/Box";
 
 const Layout = () => {

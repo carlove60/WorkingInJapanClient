@@ -4,6 +4,7 @@ import * as React from "react";
 import { CheckIn } from "../../ClientApi/ClientApi.ts";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import CancelSignUpComponent from "../CancelSignUpComponent/CancelSignUpComponent.tsx";
 interface Props {
   party: PartyDto;
   setMessages: (message: ValidationMessage[]) => void;
@@ -30,11 +31,15 @@ const PartyComponent = ({ party, setMessages }: Props) => {
   };
 
   const getCheckInText = () => {
-    if (!party?.canCheckIn) {
-      return `${party?.name}, you are signed-up!`;
+    if (party?.canCheckIn) {
+      return `${party?.name}, you can check-in now!`;
     }
 
-    return `${party?.name}, you can check-in now!`;
+    return `${party?.name}, you are signed-up!`;
+  };
+
+  const onBusy = (value: boolean): void => {
+    setDisabled(value);
   };
 
   return (
@@ -53,6 +58,14 @@ const PartyComponent = ({ party, setMessages }: Props) => {
           </Typography>
           {!party.canCheckIn ? <div>A check-in button will appear as soon as you can check-in!</div> : null}
           {getCheckInButton()}
+          <CancelSignUpComponent
+            setBusy={onBusy}
+            disabled={disabled}
+            onCancellation={(value) => {
+              setMessages(value);
+              setDisabled(false);
+            }}
+          />
         </Box>
       )}
     </>

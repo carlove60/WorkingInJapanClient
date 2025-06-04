@@ -1,6 +1,6 @@
 import { ValidationMessage } from "../../ClientApi";
 import { store } from "../../store.ts";
-import { add } from "../../Components/Bubble/BubbleSlice.ts";
+import { add } from "../../Components/BubbleComponent/BubbleSlice.ts";
 
 type ResponseWithBodyError = {
   response: Response;

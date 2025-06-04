@@ -4,6 +4,7 @@ apis/index.ts
 index.ts
 models/AddToWaitingListRequest.ts
 models/AddToWaitingListResponse.ts
+models/CancelCheckInResponse.ts
 models/CheckInResponse.ts
 models/GetPartyResponse.ts
 models/MessageType.ts
