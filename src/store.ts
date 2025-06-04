@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import errorReducer from "./Components/Bubble/BubbleSlice.ts"; // Import the error reducer
+import errorReducer from "./Components/BubbleComponent/BubbleSlice.ts"; // Import the error reducer
 
 export const store = configureStore({
   reducer: {

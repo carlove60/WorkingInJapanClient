@@ -32,9 +32,7 @@ const WaitingListComponent = () => {
 
   const refreshWaitingList = React.useCallback(async () => {
     const waitingListResponse = await GetWaitingList();
-    if (waitingListResponse?.waitingList !== waitingList) {
-      setWaitingList(waitingListResponse?.waitingList);
-    }
+    setWaitingList(waitingListResponse?.waitingList);
   }, [setWaitingList]);
 
   const enableRefreshParty = (): boolean => {
@@ -42,7 +40,7 @@ const WaitingListComponent = () => {
   };
 
   const enableRefreshWaitingList = (): boolean => {
-    return party !== undefined;
+    return isNotNullOrUndefined(party);
   };
 
   usePolling(refreshParty, enableRefreshParty());

@@ -1,4 +1,10 @@
-import { AddToWaitingListResponse, AddToWaitingListRequest, GetPartyResponse, CheckInResponse } from "./models";
+import {
+  AddToWaitingListResponse,
+  AddToWaitingListRequest,
+  GetPartyResponse,
+  CheckInResponse,
+  CancelCheckInResponse,
+} from "./models";
 import { PartyClient, WaitingListClient } from "./ApiControllers.ts";
 import { WaitingListResponse } from "./models";
 import { handleMessages, transformException } from "../Helpers/ApiClientHelper/ApiClientHelper.ts";
@@ -20,6 +26,10 @@ export const GetParty = async (): Promise<GetPartyResponse> => {
 
 export const CheckIn = async (): Promise<CheckInResponse> => {
   return await BaseCall<CheckInResponse>(PartyClient.checkIn);
+};
+
+export const CancelCheckIn = async (): Promise<CheckInResponse> => {
+  return await BaseCall<CancelCheckInResponse>(PartyClient.cancelCheckIn);
 };
 
 async function BaseCall<T>(method: () => Promise<T>): Promise<T> {

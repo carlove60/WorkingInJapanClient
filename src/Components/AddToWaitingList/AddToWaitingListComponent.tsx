@@ -5,7 +5,7 @@ import { validatePartyDto } from "../../Validators/PartyModelValidator/PartyMode
 import useValidatedModel from "../../Hooks/UseValidatedModel/useValidatedModel.ts";
 import TextFieldComponent from "../Shared/TextFieldComponent/TextFieldComponent.tsx";
 import NumberFieldComponent from "../Shared/NumberFieldComponent/NumberFieldComponent.tsx";
-import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
+import { getMessageForProperty, hasErrors } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
 import { PartyDto, ValidationMessage } from "../../ClientApi";
 import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
 import { validatePartySize } from "../../Validators/WaitingListvalidator/WaitingListValidator.ts";
@@ -13,6 +13,7 @@ import CurrentQueueComponent from "../CurrentQueueComponent/CurrentQueueComponen
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { SxProps, Theme } from "@mui/material";
+import { isNotNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 
 export interface Props {
   parties: PartyDto[] | undefined;
@@ -41,11 +42,13 @@ const AddToWaitingListComponent = ({
 
   React.useEffect(() => {
     const partySizeValidation = validatePartySize(partyDto.size, seatsAvailable ?? 0);
-    setMessages(partySizeValidation ? [partySizeValidation] : []);
-  }, [partyDto.size, validationMessages, setMessages, seatsAvailable]);
+    if (isNotNullOrUndefined(partySizeValidation)) {
+      setMessages([partySizeValidation]);
+    }
+  }, [partyDto.size, seatsAvailable]);
 
   const onSubmitPress = async (): Promise<void> => {
-    if (messages.length === 0 && validationMessages.length === 0) {
+    if (!hasErrors(messages) && validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
       const noErrorMessages = result.messages.filter((m) => m.type === "error").length === 0;
@@ -72,7 +75,7 @@ const AddToWaitingListComponent = ({
   };
 
   const isButtonDisabled = (): boolean => {
-    return validationMessages.length > 0 || messages?.length > 0 || seatsAvailable === 0 || isDisabled;
+    return validationMessages.length > 0 || hasErrors(messages) || seatsAvailable === 0 || isDisabled;
   };
 
   const sx: SxProps<Theme> = {

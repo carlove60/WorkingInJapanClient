@@ -29,4 +29,5 @@ export const WaitingListClient = {
 export const PartyClient = {
   getParty: () => partyApi.getPartyGet(),
   checkIn: () => partyApi.apiPartyCheckInPost(),
+  cancelCheckIn: () => partyApi.apiPartyCancelCheckInPost(),
 };
