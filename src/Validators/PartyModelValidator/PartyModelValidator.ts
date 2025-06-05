@@ -7,12 +7,17 @@ export interface ExtendedValidationMessage extends ValidationMessage {
   field: keyof PartyDto | undefined;
 }
 
-export const validatePartyDto = (model: PartyDto | undefined): ExtendedValidationMessage[] => {
+export interface PartyDtoValidatorModel {
+  party: PartyDto;
+  seatsAvailable: number | undefined;
+}
+
+export const validatePartyDto = (model: PartyDtoValidatorModel | undefined): ExtendedValidationMessage[] => {
   const validationMessages: ExtendedValidationMessage[] = [];
   if (isNullOrUndefined(model)) {
     return validationMessages;
   }
-  if (isNullOrEmpty(model.name)) {
+  if (isNullOrEmpty(model.party?.name)) {
     const validationMessage: ExtendedValidationMessage = {
       type: MessageType.Error,
       message: "Please enter the name of your party",
@@ -20,7 +25,7 @@ export const validatePartyDto = (model: PartyDto | undefined): ExtendedValidatio
     };
     validationMessages.push(validationMessage);
   }
-  if (!isNumeric(model.size)) {
+  if (!isNumeric(model.party?.size)) {
     const validationMessage: ExtendedValidationMessage = {
       type: MessageType.Error,
       message: "Please enter the size of your party",
@@ -29,10 +34,22 @@ export const validatePartyDto = (model: PartyDto | undefined): ExtendedValidatio
     validationMessages.push(validationMessage);
   }
 
-  if (isNumeric(model.size) && model.size < 1) {
+  if (isNumeric(model.party?.size) && model.party?.size < 1) {
     const validationMessage: ExtendedValidationMessage = {
       type: MessageType.Error,
       message: "Your party must be at least be 1 person",
+      field: "size",
+    };
+    validationMessages.push(validationMessage);
+  }
+
+  if (
+    isNullOrUndefined(model.seatsAvailable) ||
+    (isNumeric(model.party?.size) && model.party?.size > model.seatsAvailable)
+  ) {
+    const validationMessage: ExtendedValidationMessage = {
+      message: `Your party size of ${model.party?.size} is larger than the total of ${model.seatsAvailable} seats available`,
+      type: "error",
       field: "size",
     };
     validationMessages.push(validationMessage);

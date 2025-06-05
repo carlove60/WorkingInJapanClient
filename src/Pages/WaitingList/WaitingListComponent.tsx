@@ -28,12 +28,12 @@ const WaitingListComponent = () => {
   const refreshParty = React.useCallback(async () => {
     const partyResponse = await GetParty();
     setParty(partyResponse?.party ?? {});
-  }, [setParty]);
+  }, []);
 
   const refreshWaitingList = React.useCallback(async () => {
     const waitingListResponse = await GetWaitingList();
     setWaitingList(waitingListResponse?.waitingList);
-  }, [setWaitingList]);
+  }, []);
 
   const enableRefreshParty = (): boolean => {
     return isNotNullOrUndefined(party) && isNotNullOrEmpty(party.sessionId);
@@ -57,7 +57,6 @@ const WaitingListComponent = () => {
         waitingListName={waitingList?.name}
         parties={waitingList?.parties}
         seatsAvailable={waitingList?.seatsAvailable}
-        messages={messages}
         setMessages={setMessages}
       />
     );
