@@ -1,120 +1,75 @@
 import * as React from "react";
-import ButtonComponent from "../Shared/ButtonComponent/ButtonComponent.tsx";
-import useUpdateModel from "../../Hooks/UseUpdateModel/useUpdateModel.ts";
-import { validatePartyDto } from "../../Validators/PartyModelValidator/PartyModelValidator.ts";
-import useValidatedModel from "../../Hooks/UseValidatedModel/useValidatedModel.ts";
-import TextFieldComponent from "../Shared/TextFieldComponent/TextFieldComponent.tsx";
-import NumberFieldComponent from "../Shared/NumberFieldComponent/NumberFieldComponent.tsx";
-import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
-import { PartyDto, ValidationMessage } from "../../ClientApi";
-import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
-import CurrentQueueComponent from "../CurrentQueueComponent/CurrentQueueComponent.tsx";
-import Typography from "@mui/material/Typography";
+import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWaitingListComponent.tsx";
+import PartyComponent from "../../Components/PartyComponent/PartyComponent.tsx";
+import { PartyDto, ValidationMessage, WaitingListDto } from "../../ClientApi";
+import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
+import { usePolling } from "../../Hooks/UsePolling/usePolling.ts";
+import { isNotNullOrEmpty } from "../../Helpers/StringHelper/StringHelper.ts";
+import { isNotNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
+import { Paper } from "@mui/material";
+import MessageComponent from "../../Components/Error/MessageComponent.tsx";
 import Box from "@mui/material/Box";
-import { SxProps, Theme } from "@mui/material";
-import { joinWaitList } from "./styles.ts";
 
-export interface Props {
-  parties: PartyDto[] | undefined;
-  seatsAvailable: number | undefined;
-  waitingListName: string | undefined;
-  onSignUp: (party: PartyDto | undefined) => void;
-  setMessages: (message: ValidationMessage[]) => void;
-}
+const WaitingListComponent = () => {
+  const [party, setParty] = React.useState<PartyDto>();
+  const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
+  const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
 
-const AddToWaitingListComponent = ({
-  parties,
-  seatsAvailable,
-  waitingListName,
-  onSignUp,
-  setMessages,
-}: Props): React.ReactNode => {
-  const [isDisabled, setDisabled] = React.useState(false);
-  const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
-    size: 0,
-    name: "",
-    waitingListName: waitingListName,
-  });
+  React.useEffect(() => {
+    const fetchData = async () => {
+      // Just to see if there is already a party for this session
+      // No need to show any messages
+      refreshParty();
+    };
 
-  const validationModel = React.useMemo(
-    () => ({
-      party: partyDto,
-      seatsAvailable,
-    }),
-    [partyDto, seatsAvailable],
-  );
+    fetchData();
+  }, []);
 
-  const { validationMessages } = useValidatedModel(validationModel, validatePartyDto);
+  const refreshParty = React.useCallback(async () => {
+    const partyResponse = await GetParty();
+    setParty(partyResponse?.party ?? {});
+  }, []);
 
-  const onSubmitPress = async (): Promise<void> => {
-    if (validationMessages.length === 0) {
-      setDisabled(true);
-      const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
-      const noErrorMessages = result.messages.filter((m) => m.type.toLowerCase() === "error").length === 0;
-      if (noErrorMessages) {
-        onSignUp(result.party);
-      }
-      setMessages(result.messages);
-      setDisabled(false);
-    }
+  const refreshWaitingList = React.useCallback(async () => {
+    const waitingListResponse = await GetWaitingList();
+    setWaitingList(waitingListResponse?.waitingList);
+  }, []);
+
+  const enableRefreshParty = (): boolean => {
+    return isNotNullOrUndefined(party) && isNotNullOrEmpty(party.sessionId);
   };
 
-  const onSizeChange = (value: number): void => {
-    updatePartyModel("size", value);
+  const enableRefreshWaitingList = (): boolean => {
+    return isNotNullOrUndefined(party);
   };
 
-  const onNameChange = (value: string): void => {
-    updatePartyModel("name", value);
-  };
+  usePolling(refreshParty, enableRefreshParty());
+  usePolling(refreshWaitingList, enableRefreshWaitingList());
 
-  const onKeyUp = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      await onSubmitPress();
-    }
-  };
-
-  const isButtonDisabled = (): boolean => {
-    return validationMessages.length > 0 || seatsAvailable === 0 || isDisabled;
-  };
-
-  const sx: SxProps<Theme> = {
-    height: 50,
+  const getCurrentComponent = () => {
+    return party === undefined ? (
+      <div>少々お待ちください。。。</div>
+    ) : party.sessionId ? (
+      <PartyComponent party={party} setMessages={setMessages} />
+    ) : (
+      <AddToWaitingListComponent
+        onSignUp={setParty}
+        waitingListName={waitingList?.name}
+        parties={waitingList?.parties}
+        seatsAvailable={waitingList?.seatsAvailable}
+        setMessages={setMessages}
+      />
+    );
   };
 
   return (
-    <>
-      <Typography variant="h6" gutterBottom>
-        Join the Waitlist
-      </Typography>
-      <Box onKeyUp={onKeyUp} display="flex" flexDirection="column" gap={2}>
-        <TextFieldComponent
-          onChange={onNameChange}
-          placeHolder={"Your name?"}
-          errorMessage={getMessageForProperty("name", validationMessages, "error")}
-          type={"text"}
-          value={partyDto.name}
-          label={"Name"}
-          disabled={isDisabled}
-          sx={sx}
-        />
-        <NumberFieldComponent
-          onChange={onSizeChange}
-          placeHolder={"The size of your party?"}
-          errorMessage={getMessageForProperty("size", validationMessages, "error")}
-          type={"number"}
-          value={partyDto.size}
-          label={"Size"}
-          disabled={isDisabled}
-          sx={sx}
-        />
-        <div style={joinWaitList}>
-          <ButtonComponent text={"Join the waiting list"} onPress={onSubmitPress} disabled={isButtonDisabled()} />
-        </div>
-        <div>Total seats available: {seatsAvailable ?? 0}</div>
-        <CurrentQueueComponent parties={parties} />
-      </Box>
-    </>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <MessageComponent messages={messages} />
+      <Paper elevation={3} sx={{ p: 3, mb: 3, width: 300 }}>
+        {getCurrentComponent()}
+      </Paper>
+    </Box>
   );
 };
 
-export default AddToWaitingListComponent;
+export default WaitingListComponent;
