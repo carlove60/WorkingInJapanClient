@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MessageType, ValidationMessage } from "../../ClientApi";
+import { ValidationMessage } from "../../ClientApi";
 
 interface ErrorState {
   messages: ValidationMessage[];
@@ -21,8 +21,8 @@ const bubbleSlice = createSlice({
         state.messages.push(action.payload);
       }
     },
-    clearBubble: (state, action: PayloadAction<MessageType>) => {
-      state.messages = state.messages.filter((message) => message.type !== action.payload);
+    clearBubble: (state) => {
+      state.messages = [];
     },
   },
 });

@@ -7,8 +7,15 @@ export function getMessageForProperty<T>(
   validationMessages: ExtendedValidationMessage[],
   type: MessageType,
 ): string {
-  return validationMessages.filter((x) => x.field === fieldName && x.validationMessage.type === type)[0]
-    ?.validationMessage.message;
+  return validationMessages.filter((x) => x.field === fieldName && x.type === type)[0]?.message;
+}
+
+export function hasErrors(validationMessages: ValidationMessage[] | undefined): boolean {
+  if (isNullOrUndefined(validationMessages) || validationMessages.length === 0) {
+    return false;
+  }
+
+  return validationMessages.some((x) => x.type === MessageType.Error);
 }
 
 export function hasErrors(validationMessages: ValidationMessage[]): boolean {

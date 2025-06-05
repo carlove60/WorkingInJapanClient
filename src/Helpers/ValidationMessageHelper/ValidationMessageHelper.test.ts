@@ -8,11 +8,13 @@ describe("getMessageForProperty", () => {
   const validationMessages: ExtendedValidationMessage[] = [
     {
       field: "name",
-      validationMessage: { type: MessageType.Error, message: "Name is required." },
+      type: MessageType.Error,
+      message: "Name is required.",
     },
     {
       field: "size",
-      validationMessage: { type: MessageType.Warning, message: "Size is not valid." },
+      type: MessageType.Warning,
+      message: "Size is not valid.",
     },
   ];
 
@@ -35,11 +37,13 @@ describe("getMessageForProperty", () => {
     const customValidationMessages: ExtendedValidationMessage[] = [
       {
         field: "name",
-        validationMessage: { type: MessageType.Error, message: "Name error." },
+        type: MessageType.Error,
+        message: "Name error.",
       },
       {
         field: "name",
-        validationMessage: { type: MessageType.Error, message: "Name not error." },
+        type: MessageType.Error,
+        message: "Name not error.",
       },
     ];
     const result = getMessageForProperty("name", customValidationMessages, MessageType.Error);

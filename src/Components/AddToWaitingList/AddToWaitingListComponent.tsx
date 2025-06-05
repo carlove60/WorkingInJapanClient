@@ -5,15 +5,14 @@ import { validatePartyDto } from "../../Validators/PartyModelValidator/PartyMode
 import useValidatedModel from "../../Hooks/UseValidatedModel/useValidatedModel.ts";
 import TextFieldComponent from "../Shared/TextFieldComponent/TextFieldComponent.tsx";
 import NumberFieldComponent from "../Shared/NumberFieldComponent/NumberFieldComponent.tsx";
-import { getMessageForProperty, hasErrors } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
+import { getMessageForProperty } from "../../Helpers/ValidationMessageHelper/ValidationMessageHelper.ts";
 import { PartyDto, ValidationMessage } from "../../ClientApi";
 import { AddToWaitingList } from "../../ClientApi/ClientApi.ts";
-import { validatePartySize } from "../../Validators/WaitingListvalidator/WaitingListValidator.ts";
 import CurrentQueueComponent from "../CurrentQueueComponent/CurrentQueueComponent.tsx";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { SxProps, Theme } from "@mui/material";
-import { isNotNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
+import { joinWaitList } from "./styles.ts";
 
 export interface Props {
   parties: PartyDto[] | undefined;
@@ -21,7 +20,6 @@ export interface Props {
   waitingListName: string | undefined;
   onSignUp: (party: PartyDto | undefined) => void;
   setMessages: (message: ValidationMessage[]) => void;
-  messages: ValidationMessage[];
 }
 
 const AddToWaitingListComponent = ({
@@ -30,7 +28,6 @@ const AddToWaitingListComponent = ({
   waitingListName,
   onSignUp,
   setMessages,
-  messages,
 }: Props): React.ReactNode => {
   const [isDisabled, setDisabled] = React.useState(false);
   const { model: partyDto, updateModel: updatePartyModel } = useUpdateModel<PartyDto>({
@@ -38,20 +35,22 @@ const AddToWaitingListComponent = ({
     name: "",
     waitingListName: waitingListName,
   });
-  const { validationMessages } = useValidatedModel(partyDto, validatePartyDto);
 
-  React.useEffect(() => {
-    const partySizeValidation = validatePartySize(partyDto.size, seatsAvailable ?? 0);
-    if (isNotNullOrUndefined(partySizeValidation)) {
-      setMessages([partySizeValidation]);
-    }
-  }, [partyDto.size, seatsAvailable]);
+  const validationModel = React.useMemo(
+    () => ({
+      party: partyDto,
+      seatsAvailable,
+    }),
+    [partyDto, seatsAvailable],
+  );
+
+  const { validationMessages } = useValidatedModel(validationModel, validatePartyDto);
 
   const onSubmitPress = async (): Promise<void> => {
-    if (!hasErrors(messages) && validationMessages.length === 0) {
+    if (validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
-      const noErrorMessages = result.messages.filter((m) => m.type === "error").length === 0;
+      const noErrorMessages = result.messages.filter((m) => m.type?.toLowerCase() === "error").length === 0;
       if (noErrorMessages) {
         onSignUp(result.party);
       }
@@ -75,7 +74,7 @@ const AddToWaitingListComponent = ({
   };
 
   const isButtonDisabled = (): boolean => {
-    return validationMessages.length > 0 || hasErrors(messages) || seatsAvailable === 0 || isDisabled;
+    return validationMessages.length > 0 || seatsAvailable === 0 || isDisabled;
   };
 
   const sx: SxProps<Theme> = {
@@ -108,7 +107,7 @@ const AddToWaitingListComponent = ({
           disabled={isDisabled}
           sx={sx}
         />
-        <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <div style={joinWaitList}>
           <ButtonComponent text={"Join the waiting list"} onPress={onSubmitPress} disabled={isButtonDisabled()} />
         </div>
         <div>Total seats available: {seatsAvailable ?? 0}</div>

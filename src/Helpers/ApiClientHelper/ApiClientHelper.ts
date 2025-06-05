@@ -1,6 +1,6 @@
 import { ValidationMessage } from "../../ClientApi";
 import { store } from "../../store.ts";
-import { add } from "../../Components/BubbleComponent/BubbleSlice.ts";
+import { add, clearBubble } from "../../Components/BubbleComponent/BubbleSlice.ts";
 
 type ResponseWithBodyError = {
   response: Response;
@@ -34,7 +34,11 @@ export const transformException = async (exception: unknown): Promise<Validation
 };
 
 export const handleMessages = (messages: ValidationMessage[]): void => {
-  messages?.forEach((message) => {
-    store.dispatch(add(message));
-  });
+  if (messages?.length > 0) {
+    messages?.forEach((message) => {
+      store.dispatch(add(message));
+    });
+  } else {
+    store.dispatch(clearBubble());
+  }
 };

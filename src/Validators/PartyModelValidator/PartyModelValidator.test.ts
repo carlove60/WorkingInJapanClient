@@ -1,88 +1,110 @@
+// validatePartyDto.test.ts
 import { MessageType } from "../../ClientApi";
-import { PartyDto } from "../../ClientApi";
-import { validatePartyDto } from "./PartyModelValidator";
+import { ExtendedValidationMessage, PartyDtoValidatorModel, validatePartyDto } from "./PartyModelValidator.ts";
 
 describe("validatePartyDto", () => {
-  it("returns an empty array when the model is undefined", () => {
-    const validationMessages = validatePartyDto(undefined);
-    expect(validationMessages).toEqual([]);
+  it("should return an empty array when the model is undefined", () => {
+    const result = validatePartyDto(undefined);
+    expect(result).toEqual([]);
   });
 
-  it("returns an empty array when the model is null", () => {
-    const validationMessages = validatePartyDto(null as unknown as PartyDto);
-    expect(validationMessages).toEqual([]);
-  });
+  it("should validate when the party name is missing", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "", size: 5 },
+      seatsAvailable: 10,
+    };
 
-  it("returns a validation message for an empty name field", () => {
-    const model: PartyDto = { name: "", size: 5 };
-    const validationMessages = validatePartyDto(model);
-
-    expect(validationMessages).toHaveLength(1);
-    expect(validationMessages[0]).toEqual({
-      validationMessage: {
+    const result = validatePartyDto(model);
+    const expected: ExtendedValidationMessage[] = [
+      {
         type: MessageType.Error,
         message: "Please enter the name of your party",
+        field: "name",
       },
-      field: "name",
-    });
+    ];
+    expect(result).toEqual(expected);
   });
 
-  it("returns a validation message when the 'size' field is not numeric", () => {
-    const model: PartyDto = { name: "Test Party", size: NaN };
-    const validationMessages = validatePartyDto(model);
+  it("should validate when the party size is not numeric", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "My Party", size: NaN },
+      seatsAvailable: 10,
+    };
 
-    expect(validationMessages).toHaveLength(1);
-    expect(validationMessages[0]).toEqual({
-      validationMessage: {
+    const result = validatePartyDto(model);
+    const expected: ExtendedValidationMessage[] = [
+      {
         type: MessageType.Error,
         message: "Please enter the size of your party",
+        field: "size",
       },
-      field: "size",
-    });
+    ];
+    expect(result).toEqual(expected);
   });
 
-  it("returns a validation message when the size is less than 1", () => {
-    const model: PartyDto = { name: "Test Party", size: 0 };
-    const validationMessages = validatePartyDto(model);
+  it("should validate when the party size is less than 1", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "My Party", size: 0 },
+      seatsAvailable: 10,
+    };
 
-    expect(validationMessages).toHaveLength(1);
-    expect(validationMessages[0]).toEqual({
-      validationMessage: {
+    const result = validatePartyDto(model);
+    const expected: ExtendedValidationMessage[] = [
+      {
         type: MessageType.Error,
         message: "Your party must be at least be 1 person",
+        field: "size",
       },
-      field: "size",
-    });
+    ];
+    expect(result).toEqual(expected);
   });
 
-  it("returns no validation messages for a valid PartyDto model", () => {
-    const model: PartyDto = { name: "Valid Party", size: 5 };
-    const validationMessages = validatePartyDto(model);
+  it("should validate when party size exceeds seats available", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "My Party", size: 15 },
+      seatsAvailable: 10,
+    };
 
-    expect(validationMessages).toHaveLength(0);
-  });
-
-  it("returns multiple validation messages when there are multiple validation errors", () => {
-    const model: PartyDto = { name: "", size: 0 };
-    const validationMessages = validatePartyDto(model);
-
-    expect(validationMessages).toHaveLength(2);
-
-    expect(validationMessages).toEqual([
+    const result = validatePartyDto(model);
+    const expected: ExtendedValidationMessage[] = [
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Please enter the name of your party",
-        },
+        message: "Your party size of 15 is larger than the total of 10 seats available",
+        type: "error",
+        field: "size",
+      },
+    ];
+    expect(result).toEqual(expected);
+  });
+
+  it("should return multiple validation messages if multiple validations fail", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "", size: 0 },
+      seatsAvailable: 10,
+    };
+
+    const result = validatePartyDto(model);
+    const expected: ExtendedValidationMessage[] = [
+      {
+        type: MessageType.Error,
+        message: "Please enter the name of your party",
         field: "name",
       },
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Your party must be at least be 1 person",
-        },
+        type: MessageType.Error,
+        message: "Your party must be at least be 1 person",
         field: "size",
       },
-    ]);
+    ];
+    expect(result).toEqual(expected);
+  });
+
+  it("should validate successfully with no errors if data is valid", () => {
+    const model: PartyDtoValidatorModel = {
+      party: { name: "Valid Party", size: 5 },
+      seatsAvailable: 10,
+    };
+
+    const result = validatePartyDto(model);
+    expect(result).toEqual([]);
   });
 });

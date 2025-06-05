@@ -16,6 +16,7 @@
     "gen-client": "kiota generate -l typescript -d \"./swaggerfile.json\" -o ./generated-api\n"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.1",

@@ -4,7 +4,7 @@ import { SxProps, Theme } from "@mui/material";
 
 interface NumberFieldComponentProps extends SharedFieldComponentProps {
   onChange: (value: number) => void;
-  value: number | undefined;
+  value?: number;
   sx: SxProps<Theme>;
 }
 
