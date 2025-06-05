@@ -50,7 +50,7 @@ const AddToWaitingListComponent = ({
     if (validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
-      const noErrorMessages = result.messages.filter((m) => m.type.toLowerCase() === "error").length === 0;
+      const noErrorMessages = result.messages.filter((m) => m.type?.toLowerCase() === "error").length === 0;
       if (noErrorMessages) {
         onSignUp(result.party);
       }
