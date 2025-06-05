@@ -65,7 +65,7 @@ const WaitingListComponent = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <MessageComponent messages={messages} onClose={() => setMessages([])} />
+      <MessageComponent messages={messages} />
       <Paper elevation={3} sx={{ p: 3, mb: 3, width: 300 }}>
         {getCurrentComponent()}
       </Paper>

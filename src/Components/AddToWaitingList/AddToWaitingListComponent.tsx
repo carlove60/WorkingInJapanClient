@@ -44,6 +44,8 @@ const AddToWaitingListComponent = ({
     const partySizeValidation = validatePartySize(partyDto.size, seatsAvailable ?? 0);
     if (isNotNullOrUndefined(partySizeValidation)) {
       setMessages([partySizeValidation]);
+    } else {
+      setMessages([]);
     }
   }, [partyDto.size, seatsAvailable]);
 
@@ -51,7 +53,7 @@ const AddToWaitingListComponent = ({
     if (!hasErrors(messages) && validationMessages.length === 0) {
       setDisabled(true);
       const result = await AddToWaitingList({ party: { ...partyDto, waitingListName: waitingListName } });
-      const noErrorMessages = result.messages.filter((m) => m.type === "error").length === 0;
+      const noErrorMessages = result.messages.filter((m) => m.type.toLowerCase() === "Error").length === 0;
       if (noErrorMessages) {
         onSignUp(result.party);
       }

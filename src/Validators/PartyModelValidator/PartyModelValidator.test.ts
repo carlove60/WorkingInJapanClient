@@ -19,10 +19,8 @@ describe("validatePartyDto", () => {
 
     expect(validationMessages).toHaveLength(1);
     expect(validationMessages[0]).toEqual({
-      validationMessage: {
-        type: MessageType.Error,
-        message: "Please enter the name of your party",
-      },
+      type: MessageType.Error,
+      message: "Please enter the name of your party",
       field: "name",
     });
   });
@@ -33,10 +31,8 @@ describe("validatePartyDto", () => {
 
     expect(validationMessages).toHaveLength(1);
     expect(validationMessages[0]).toEqual({
-      validationMessage: {
-        type: MessageType.Error,
-        message: "Please enter the size of your party",
-      },
+      type: MessageType.Error,
+      message: "Please enter the size of your party",
       field: "size",
     });
   });
@@ -47,10 +43,8 @@ describe("validatePartyDto", () => {
 
     expect(validationMessages).toHaveLength(1);
     expect(validationMessages[0]).toEqual({
-      validationMessage: {
-        type: MessageType.Error,
-        message: "Your party must be at least be 1 person",
-      },
+      type: MessageType.Error,
+      message: "Your party must be at least be 1 person",
       field: "size",
     });
   });
@@ -70,17 +64,13 @@ describe("validatePartyDto", () => {
 
     expect(validationMessages).toEqual([
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Please enter the name of your party",
-        },
+        type: MessageType.Error,
+        message: "Please enter the name of your party",
         field: "name",
       },
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Your party must be at least be 1 person",
-        },
+        type: MessageType.Error,
+        message: "Your party must be at least be 1 person",
         field: "size",
       },
     ]);
