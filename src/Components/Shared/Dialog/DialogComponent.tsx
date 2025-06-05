@@ -22,6 +22,7 @@ function DialogComponent({ open, payload, onClose }: DialogProps<DialogComponent
       <DialogContent>{payload.text}</DialogContent>
       <DialogActions>
         <Button
+          variant="outlined"
           onClick={() => {
             payload.onAccept();
             onClose();
@@ -30,12 +31,13 @@ function DialogComponent({ open, payload, onClose }: DialogProps<DialogComponent
           Confirm
         </Button>
         <Button
+          variant="contained"
           onClick={() => {
             payload.onCancel();
             onClose(undefined);
           }}
         >
-          Cancel
+          Close
         </Button>
       </DialogActions>
     </Dialog>

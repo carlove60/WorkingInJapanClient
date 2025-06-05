@@ -44,7 +44,7 @@ const CancelSignUpComponent = ({ disabled, onCancellation, setBusy }: CancelSign
   return (
     <Box style={{ paddingTop: 20 }}>
       <Typography variant="h5" gutterBottom>
-        Do you want to cancel your spot on the waiting list?
+        Cancel your spot?
       </Typography>
       <ButtonComponent disabled={disabled || cancelDisabled} text={"Click here to cancel"} onPress={onCancelSignUp} />
     </Box>
