@@ -17,11 +17,3 @@ export function hasErrors(validationMessages: ValidationMessage[] | undefined): 
 
   return validationMessages.some((x) => x.type === MessageType.Error);
 }
-
-export function hasErrors(validationMessages: ValidationMessage[]): boolean {
-  if (isNullOrUndefined(validationMessages) || validationMessages.length === 0) {
-    return false;
-  }
-
-  return validationMessages.some((x) => x.type === MessageType.Error);
-}
