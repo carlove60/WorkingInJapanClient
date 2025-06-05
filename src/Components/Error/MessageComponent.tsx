@@ -4,18 +4,18 @@ import * as React from "react";
 import { isNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import { MessageType, ValidationMessage } from "../../ClientApi";
 
-const MessageComponent = ({
-  messages,
-  onClose,
-}: {
-  messages: ValidationMessage[] | undefined;
-  onClose: () => void;
-}) => {
+const MessageComponent = ({ messages }: { messages: ValidationMessage[] | undefined }) => {
   const [open, setOpen] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!isNullOrUndefined(messages) && messages.length > 0) {
+      // Reset open to true whenever new messages arrive
+      setOpen(true);
+    }
+  }, [messages]);
 
   const handleClose = () => {
     setOpen(false);
-    onClose();
   };
 
   const hasMessages = !isNullOrUndefined(messages) && messages.length > 0;
@@ -31,7 +31,7 @@ const MessageComponent = ({
         flexDirection: "column",
       }}
     >
-      <Collapse in={open && hasMessages} unmountOnExit>
+      <Collapse in={open && hasMessages}>
         {messages?.map((message) => (
           <Collapse in={open || !isNullOrUndefined(message)} key={message.message}>
             <Alert

@@ -51,17 +51,13 @@ describe("useValidatedModel", () => {
     const invalidModel: PartyDto = { name: "", size: 0 };
     const validationMessages: ExtendedValidationMessage[] = [
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Please enter the name of your party",
-        },
+        type: MessageType.Error,
+        message: "Please enter the name of your party",
         field: "name",
       },
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Your party must be at least be 1 person",
-        },
+        type: MessageType.Error,
+        message: "Your party must be at least be 1 person",
         field: "size",
       },
     ];
@@ -81,17 +77,13 @@ describe("useValidatedModel", () => {
 
     const validationMessages: ExtendedValidationMessage[] = [
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Please enter the name of your party",
-        },
+        type: MessageType.Error,
+        message: "Please enter the name of your party",
         field: "name",
       },
       {
-        validationMessage: {
-          type: MessageType.Error,
-          message: "Your party must be at least be 1 person",
-        },
+        type: MessageType.Error,
+        message: "Your party must be at least be 1 person",
         field: "size",
       },
     ];

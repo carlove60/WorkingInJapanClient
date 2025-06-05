@@ -87,7 +87,7 @@ describe("WaitingListComponent", () => {
 
     // Simulate adding validation messages
     act(() => {
-      render(<MessageComponent messages={mockValidationMessages} onClose={jest.fn()} />);
+      render(<MessageComponent messages={mockValidationMessages} />);
     });
 
     await waitFor(() => {
