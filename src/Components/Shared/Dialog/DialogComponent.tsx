@@ -8,7 +8,7 @@ export interface DialogComponentProps {
   onCancel: () => void;
 }
 
-const DialogComponent = ({ open, payload, onClose }: DialogProps<DialogComponentProps>): React.ReactNode => {
+function DialogComponent({ open, payload, onClose }: DialogProps<DialogComponentProps>): React.ReactNode {
   return (
     <Dialog
       fullWidth
@@ -42,6 +42,6 @@ const DialogComponent = ({ open, payload, onClose }: DialogProps<DialogComponent
       </DialogActions>
     </Dialog>
   );
-};
+}
 
 export default DialogComponent;
