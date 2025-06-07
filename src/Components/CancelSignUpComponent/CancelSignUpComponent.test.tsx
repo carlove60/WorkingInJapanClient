@@ -32,7 +32,7 @@ describe("CancelSignUpComponent", () => {
     );
     const clickToCancel = screen.getByText("Click here to cancel");
     fireEvent.click(clickToCancel);
-    const cancelButton = screen.getByText("Cancel");
+    const cancelButton = screen.getByText("Close");
     fireEvent.click(cancelButton);
 
     expect(mockSetBusy).toHaveBeenCalledWith(true);

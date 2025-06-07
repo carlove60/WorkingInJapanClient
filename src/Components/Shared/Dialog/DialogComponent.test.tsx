@@ -53,12 +53,12 @@ describe("DialogComponent", () => {
     expect(defaultOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it("calls the onClose handler when the 'Cancel' button is clicked without invoking onAccept", () => {
+  it("calls the onClose handler when the 'Close' button is clicked without invoking onAccept", () => {
     // Given: A dialog component with valid payload
     renderComponent({});
 
     // When: The 'Cancel' button is clicked
-    const cancelButton = screen.getByText("Cancel");
+    const cancelButton = screen.getByText("Close");
     fireEvent.click(cancelButton);
 
     // Then: Ensure the onClose handler is called exactly 3 times
