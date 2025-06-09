@@ -18,6 +18,9 @@ From the root of the Client project, run `npm run dev`
 The project should start at `http://localhost:5173` (default)
 
 -----
+## UPDATE
+SSE support has been added under the open branch.
+Can be ignored for this code review but I wasn't satisfied with the current implementation.
 
 ## About this app
 This is an API driven app, created to be as flexible as possible, using React and TypeScript.
