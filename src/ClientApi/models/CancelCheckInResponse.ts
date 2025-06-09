@@ -20,13 +20,6 @@ import {
     ValidationMessageToJSON,
     ValidationMessageToJSONTyped,
 } from './ValidationMessage';
-import type { PartyDto } from './PartyDto';
-import {
-    PartyDtoFromJSON,
-    PartyDtoFromJSONTyped,
-    PartyDtoToJSON,
-    PartyDtoToJSONTyped,
-} from './PartyDto';
 
 /**
  * 
@@ -40,12 +33,6 @@ export interface CancelCheckInResponse {
      * @memberof CancelCheckInResponse
      */
     messages: Array<ValidationMessage>;
-    /**
-     * 
-     * @type {PartyDto}
-     * @memberof CancelCheckInResponse
-     */
-    party?: PartyDto;
 }
 
 /**
@@ -67,7 +54,6 @@ export function CancelCheckInResponseFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'messages': ((json['messages'] as Array<any>).map(ValidationMessageFromJSON)),
-        'party': json['party'] == null ? undefined : PartyDtoFromJSON(json['party']),
     };
 }
 
@@ -83,7 +69,6 @@ export function CancelCheckInResponseToJSONTyped(value?: CancelCheckInResponse |
     return {
         
         'messages': ((value['messages'] as Array<any>).map(ValidationMessageToJSON)),
-        'party': PartyDtoToJSON(value['party']),
     };
 }
 

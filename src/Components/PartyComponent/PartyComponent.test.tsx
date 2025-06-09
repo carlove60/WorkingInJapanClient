@@ -15,12 +15,13 @@ describe("PartyComponent", () => {
     render(
       <DialogsProvider>
         <PartyComponent
+          onCheckIn={jest.fn()}
           party={{
             name: "Carlo",
             size: 10,
             waitingListName: "Waiting List A",
             checkedIn: true,
-            canCheckIn: false,
+            canCheckIn: true,
           }}
           setMessages={mockSetMessages}
         />
@@ -35,6 +36,7 @@ describe("PartyComponent", () => {
     render(
       <DialogsProvider>
         <PartyComponent
+          onCheckIn={jest.fn()}
           party={{
             name: "Carlo",
             size: 10,
@@ -55,6 +57,7 @@ describe("PartyComponent", () => {
     render(
       <DialogsProvider>
         <PartyComponent
+          onCheckIn={jest.fn()}
           party={{
             name: "Carlo",
             size: 10,

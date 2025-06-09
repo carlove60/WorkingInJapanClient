@@ -1,11 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { act } from "react";
 import * as ClientApi from "../../ClientApi/ClientApi";
-import { usePolling } from "../../Hooks/UsePolling/usePolling.ts";
 import { PartyDto, ValidationMessage, WaitingListDto } from "../../ClientApi";
 import MessageComponent from "../../Components/Error/MessageComponent.tsx";
-import WaitingListComponent from "./WaitingListComponent.tsx"; // Mocked API calls
+import WaitingListComponent from "./WaitingListComponent.tsx";
 import "@testing-library/jest-dom";
+import Paths from "../../Constants/Paths.ts";
+import { EventSourceHandler, useEventSource } from "../../Hooks/UseEventSource/useEventSource.ts";
 
 const mockParty = {
   sessionId: "123",
@@ -28,12 +29,10 @@ const mockValidationMessages = [
   { message: "Successfully added", type: "success" },
 ] as ValidationMessage[];
 
-jest.mock("../../Hooks/UsePolling/usePolling.ts", () => ({
-  usePolling: jest.fn(),
-}));
-
 jest.mock("../../ClientApi/ClientApi", () => ({
-  GetParty: jest.fn(),
+  GetParty: jest.fn(() => {
+    return undefined;
+  }),
   GetWaitingList: jest.fn(() => {
     return { waitingList: mockWaitingList };
   }),
@@ -43,12 +42,23 @@ jest.mock("@toolpad/core/useDialogs", () => ({
   useDialogs: jest.fn(),
 }));
 
-// Mock the polling behavior (disable periodic calls during tests)
-(usePolling as jest.Mock).mockImplementation((callback: () => void, enabled: boolean) => {
-  if (enabled) {
-    callback();
-  }
-});
+const mEventSourceInstance = {
+  onmessage: jest.fn(),
+  close: jest.fn(),
+  get onMessage() {
+    return this.onmessage;
+  },
+  set onMessage(value) {
+    this.onmessage = value;
+  },
+};
+const MockEventSource = jest.fn().mockImplementation(() => mEventSourceInstance);
+global.EventSource = MockEventSource as unknown as typeof EventSource;
+
+jest.mock("../../Hooks/UseEventSource/useEventSource.ts", () => ({
+  useEventSource: jest.fn(),
+}));
+
 describe("WaitingListComponent", () => {
   test("renders loading state when party is undefined", async () => {
     (ClientApi.GetParty as jest.Mock).mockResolvedValue({ party: undefined });
@@ -71,6 +81,23 @@ describe("WaitingListComponent", () => {
   test("renders AddToWaitingListComponent when party has no sessionId", async () => {
     (ClientApi.GetParty as jest.Mock).mockResolvedValue({ party: { ...mockParty, sessionId: "" } });
     (ClientApi.GetWaitingList as jest.Mock).mockResolvedValue({ waitingList: mockWaitingList });
+    (useEventSource as jest.Mock).mockImplementation((eventSources: EventSourceHandler[]) => {
+      // Simulate the behavior of EventSource
+      eventSources.forEach((eventSource) => {
+        // Simulate the `onMessage` callback directly
+        if (eventSource.url === Paths.SseMonitorWaitingList) {
+          console.log("onMessage", eventSource);
+          act(() => {
+            eventSource.onMessage({
+              data: JSON.stringify({
+                messages: [],
+                waitingList: { seatsAvailable: 10, name: "Test Waiting List", parties: [] },
+              }),
+            } as MessageEvent);
+          });
+        }
+      });
+    });
 
     render(<WaitingListComponent />);
 
@@ -81,10 +108,6 @@ describe("WaitingListComponent", () => {
   });
 
   test("displays validation messages", async () => {
-    (ClientApi.GetParty as jest.Mock).mockResolvedValue({ party: undefined });
-
-    render(<WaitingListComponent />);
-
     // Simulate adding validation messages
     act(() => {
       render(<MessageComponent messages={mockValidationMessages} />);

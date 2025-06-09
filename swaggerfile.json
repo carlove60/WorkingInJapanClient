@@ -97,6 +97,18 @@
         }
       }
     },
+    "/api/Sse/dto-update": {
+      "get": {
+        "tags": [
+          "Sse"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/waiting-list/waiting-list": {
       "get": {
         "tags": [
@@ -215,9 +227,6 @@
             "items": {
               "$ref": "#/components/schemas/ValidationMessage"
             }
-          },
-          "party": {
-            "$ref": "#/components/schemas/PartyDto"
           }
         },
         "additionalProperties": false
@@ -288,6 +297,9 @@
             "type": "boolean"
           },
           "checkedIn": {
+            "type": "boolean"
+          },
+          "isServiceDone": {
             "type": "boolean"
           }
         },

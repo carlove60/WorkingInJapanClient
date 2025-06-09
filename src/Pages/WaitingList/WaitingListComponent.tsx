@@ -3,26 +3,38 @@ import AddToWaitingListComponent from "../../Components/AddToWaitingList/AddToWa
 import PartyComponent from "../../Components/PartyComponent/PartyComponent.tsx";
 import { PartyDto, ValidationMessage, WaitingListDto } from "../../ClientApi";
 import { GetParty, GetWaitingList } from "../../ClientApi/ClientApi.ts";
-import { usePolling } from "../../Hooks/UsePolling/usePolling.ts";
-import { isNotNullOrEmpty } from "../../Helpers/StringHelper/StringHelper.ts";
-import { isNotNullOrUndefined } from "../../Helpers/Guard/Guard.ts";
 import { Paper } from "@mui/material";
 import MessageComponent from "../../Components/Error/MessageComponent.tsx";
 import Box from "@mui/material/Box";
+import { EventSourceHandler, useEventSource } from "../../Hooks/UseEventSource/useEventSource.ts";
+import Paths from "../../Constants/Paths.ts";
 
 const WaitingListComponent = () => {
   const [party, setParty] = React.useState<PartyDto>();
   const [waitingList, setWaitingList] = React.useState<WaitingListDto>();
   const [messages, setMessages] = React.useState<ValidationMessage[]>([]);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      // Just to see if there is already a party for this session
-      // No need to show any messages
-      refreshParty();
-    };
+  const monitorPartyCheckInEventSource: EventSourceHandler = {
+    url: Paths.SseMonitorDtos,
+    onMessage: (event) => {
+      const result: { name: "PartyDto" | "WaitingListDto"; dto: PartyDto | WaitingListDto } = JSON.parse(event.data);
+      if (result.name === "PartyDto") {
+        if ((result.dto as PartyDto).isServiceDone) {
+          setParty({});
+        } else {
+          setParty(result.dto);
+        }
+      } else if (result.name === "WaitingListDto") {
+        setWaitingList(result.dto as WaitingListDto);
+      }
+    },
+  };
 
-    fetchData();
+  useEventSource([monitorPartyCheckInEventSource], party);
+
+  React.useEffect(() => {
+    refreshParty();
+    refreshWaitingList();
   }, []);
 
   const refreshParty = React.useCallback(async () => {
@@ -35,22 +47,11 @@ const WaitingListComponent = () => {
     setWaitingList(waitingListResponse?.waitingList);
   }, []);
 
-  const enableRefreshParty = (): boolean => {
-    return isNotNullOrUndefined(party) && isNotNullOrEmpty(party.sessionId);
-  };
-
-  const enableRefreshWaitingList = (): boolean => {
-    return isNotNullOrUndefined(party);
-  };
-
-  usePolling(refreshParty, enableRefreshParty());
-  usePolling(refreshWaitingList, enableRefreshWaitingList());
-
   const getCurrentComponent = () => {
     return party === undefined ? (
       <div>少々お待ちください。。。</div>
-    ) : party.sessionId ? (
-      <PartyComponent party={party} setMessages={setMessages} />
+    ) : party.sessionId && !party.isServiceDone ? (
+      <PartyComponent party={party} setMessages={setMessages} onCheckIn={(party) => setParty(party)} />
     ) : (
       <AddToWaitingListComponent
         onSignUp={setParty}
