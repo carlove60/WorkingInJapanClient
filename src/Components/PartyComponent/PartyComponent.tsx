@@ -5,12 +5,14 @@ import { CheckIn } from "../../ClientApi/ClientApi.ts";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CancelSignUpComponent from "../CancelSignUpComponent/CancelSignUpComponent.tsx";
+
 interface Props {
   party: PartyDto;
   setMessages: (message: ValidationMessage[]) => void;
+  onCheckIn: (party: PartyDto | undefined) => void;
 }
 
-const PartyComponent = ({ party, setMessages }: Props) => {
+const PartyComponent = ({ party, setMessages, onCheckIn }: Props) => {
   const [disabled, setDisabled] = React.useState(false);
 
   const isDisabled = () => {
@@ -20,6 +22,7 @@ const PartyComponent = ({ party, setMessages }: Props) => {
   const onCheckInClick = async () => {
     setDisabled(true);
     const response = await CheckIn();
+    onCheckIn(response.party);
     setMessages(response.messages);
   };
 
@@ -56,7 +59,7 @@ const PartyComponent = ({ party, setMessages }: Props) => {
           <Typography variant="h5" gutterBottom>
             {getCheckInText()}
           </Typography>
-          {!party.canCheckIn ? <div>A check-in button will appear as soon as you can check-in!</div> : null}
+          {!party?.canCheckIn ? <div>A check-in button will appear as soon as you can check-in!</div> : null}
           {getCheckInButton()}
           <CancelSignUpComponent
             setBusy={onBusy}
@@ -64,6 +67,7 @@ const PartyComponent = ({ party, setMessages }: Props) => {
             onCancellation={(value) => {
               setMessages(value);
               setDisabled(false);
+              onCheckIn({});
             }}
           />
         </Box>

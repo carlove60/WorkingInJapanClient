@@ -1,4 +1,5 @@
 apis/PartyApi.ts
+apis/SseApi.ts
 apis/WaitingListApi.ts
 apis/index.ts
 index.ts

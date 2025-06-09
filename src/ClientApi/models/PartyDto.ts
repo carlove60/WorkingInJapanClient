@@ -55,6 +55,12 @@ export interface PartyDto {
      * @memberof PartyDto
      */
     checkedIn?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PartyDto
+     */
+    isServiceDone?: boolean;
 }
 
 /**
@@ -80,6 +86,7 @@ export function PartyDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'size': json['size'] == null ? undefined : json['size'],
         'canCheckIn': json['canCheckIn'] == null ? undefined : json['canCheckIn'],
         'checkedIn': json['checkedIn'] == null ? undefined : json['checkedIn'],
+        'isServiceDone': json['isServiceDone'] == null ? undefined : json['isServiceDone'],
     };
 }
 
@@ -100,6 +107,7 @@ export function PartyDtoToJSONTyped(value?: PartyDto | null, ignoreDiscriminator
         'size': value['size'],
         'canCheckIn': value['canCheckIn'],
         'checkedIn': value['checkedIn'],
+        'isServiceDone': value['isServiceDone'],
     };
 }
 
